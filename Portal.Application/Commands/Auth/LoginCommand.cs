@@ -8,5 +8,7 @@ namespace Portal.Application.Commands.Auth
 {
     internal class LoginCommand
     {
+    
+    
     }
 }
