@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Portal.Application/bin/Debug/net8.0
+/Portal.Application/obj
+/PortalAPI/.vs
+/PortalAPI/bin/Debug/net8.0
+/PortalAPI/obj
