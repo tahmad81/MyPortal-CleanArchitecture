@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Core", "..\Portal.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Infrastructure", "..\Portal.Infrastructure\Portal.Infrastructure.csproj", "{64A47897-B490-4863-932F-7A78F1EB2DA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Shared", "..\Portal.Shared\Portal.Shared.csproj", "{EC35E8B3-6C3E-402F-9751-D935FE1AB91D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{64A47897-B490-4863-932F-7A78F1EB2DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64A47897-B490-4863-932F-7A78F1EB2DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64A47897-B490-4863-932F-7A78F1EB2DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC35E8B3-6C3E-402F-9751-D935FE1AB91D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC35E8B3-6C3E-402F-9751-D935FE1AB91D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC35E8B3-6C3E-402F-9751-D935FE1AB91D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC35E8B3-6C3E-402F-9751-D935FE1AB91D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
