@@ -7,3 +7,5 @@
 /PortalAPI/.vs
 /PortalAPI/bin/Debug/net8.0
 /PortalAPI/obj
+/Portal.Core/obj
+/Portal.Infrastructure/obj
