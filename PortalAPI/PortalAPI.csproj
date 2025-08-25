@@ -8,7 +8,23 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.19" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.19">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.19">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Portal.Application\Portal.Application.csproj" />
+    <ProjectReference Include="..\Portal.Core\Portal.Core.csproj" />
+    <ProjectReference Include="..\Portal.Infrastructure\Portal.Infrastructure.csproj" />
+    <ProjectReference Include="..\Portal.Shared\Portal.Shared.csproj" />
   </ItemGroup>
 
 </Project>

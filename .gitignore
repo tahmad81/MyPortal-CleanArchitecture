@@ -10,3 +10,8 @@
 /Portal.Core/obj
 /Portal.Infrastructure/obj
 /Portal.Shared/obj
+/Portal.Core/bin/Debug/net8.0
+/Portal.Infrastructure/bin/Debug/net8.0
+/Portal.Shared/bin/Debug/net8.0
+/PortalTest/bin/Debug/net8.0
+/PortalTest/obj
