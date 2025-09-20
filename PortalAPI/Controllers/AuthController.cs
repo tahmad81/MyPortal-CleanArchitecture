@@ -3,7 +3,9 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Portal.Application.Commands.Auth;
 using Portal.Application.Commands.Register;
+using Portal.Application.Dtos;
 using Portal.Core.Entities;
 
 namespace PortalAPI.Controllers
@@ -30,9 +32,21 @@ namespace PortalAPI.Controllers
             // Pass entity into command
             var command = new RegisterUserCommand(request);
 
-            var userId = await _mediator.Send(command);
+            var userResponse = await _mediator.Send(command);
 
-            return Ok(new { UserId = userId});
+            return Ok(userResponse);
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+
+
+            // Pass entity into command
+            var command = new LoginCommand(request.UserName, request.Password);
+
+            var userResponse = await _mediator.Send(command);
+
+            return Ok(userResponse);
         }
     }
 }

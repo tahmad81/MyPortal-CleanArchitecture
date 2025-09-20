@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Portal.Application.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Portal.Application.Interfaces
 {
-    public interface IPasswordHasher
+    public interface IAuthService
     {
-        string Hash(string password);
-        bool Verify(string password, string storedHash);
+        Task<AuthResponse> LoginAsync(LoginRequest request);
     }
-  
-
 }

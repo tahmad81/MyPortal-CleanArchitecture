@@ -9,6 +9,7 @@ namespace Portal.Application.Interfaces
 {
     public interface IUserRepository
     {
+        Task<User?> GetByUserNameAsync(string username);
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByIdAsync(int id);
         Task AddAsync(User user);

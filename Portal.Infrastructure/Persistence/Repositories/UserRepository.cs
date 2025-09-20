@@ -29,6 +29,7 @@ namespace Portal.Infrastructure.Persistence.Repositories
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
-
+        public async Task<User?> GetByUserNameAsync(string username) =>
+            await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 }

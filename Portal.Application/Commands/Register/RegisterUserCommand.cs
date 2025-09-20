@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using MediatR;
+using Portal.Application.Dtos;
 using Portal.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Application.Commands.Register
 {
-    public class  RegisterUserCommand:IRequest<string>
+    public class  RegisterUserCommand:IRequest<BaseResponse>
     {
         public RegisterUserRequest User { get; }
 

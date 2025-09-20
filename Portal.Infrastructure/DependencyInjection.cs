@@ -22,6 +22,7 @@ namespace Portal.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
             return services;
         }
