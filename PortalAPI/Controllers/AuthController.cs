@@ -42,6 +42,7 @@ namespace PortalAPI.Controllers
 
 
             // Pass entity into command...
+
             var command = new LoginCommand(request.UserName, request.Password);
 
             var userResponse = await _mediator.Send(command);
