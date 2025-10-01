@@ -1,0 +1,30 @@
+name: CI - Build PortalAPI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [self-hosted, Windows, qa]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build PortalAPI
+        run: dotnet build PortalAPI/PortalAPI.csproj -c Release
+
+      - name: Publish PortalAPI
+        run: dotnet publish PortalAPI/PortalAPI.csproj -c Release -o publish
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: portalapi-artifact
+          path: publish/
