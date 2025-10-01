@@ -1,11 +1,11 @@
 name: CI-QA - Build PortalAPI
 
-# Trigger on push or pull request to main branch
+# Trigger on push or pull request to master branch
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build:
