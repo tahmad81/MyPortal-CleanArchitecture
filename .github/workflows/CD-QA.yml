@@ -1,0 +1,44 @@
+name: CD-QA - Deploy PortalAPI to QA
+
+# Trigger this workflow after CI workflow completes successfully
+on:
+  workflow_run:
+    workflows: ["CI-QA - Build PortalAPI"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, Windows, qa]  # your local QA agent
+
+    steps:
+      # 1️⃣ Download artifact published by CI
+      - name: Download artifact from CI
+        uses: actions/download-artifact@v4
+        with:
+          name: portalapi-artifact
+          path: publish/
+
+      # 2️⃣ Stop old PortalAPI if running
+      - name: Stop old API if running
+        shell: powershell
+        run: |
+          $old = Get-Process dotnet -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "*PortalAPI.dll*" }
+          if ($old) { $old | Stop-Process -Force }
+
+      # 3️⃣ Clean QA deployment folder
+      - name: Clean QA folder
+        shell: powershell
+        run: Remove-Item D:\QA\PortalAPI\* -Recurse -Force -ErrorAction SilentlyContinue
+
+      # 4️⃣ Copy new build to QA folder
+      - name: Deploy to QA folder
+        shell: powershell
+        run: |
+          mkdir D:\QA\PortalAPI -Force
+          Copy-Item publish\* D:\QA\PortalAPI\ -Recurse -Force
+
+      # 5️⃣ Start PortalAPI in QA
+      - name: Start API
+        shell: powershell
+        run: Start-Process dotnet -ArgumentList "D:\QA\PortalAPI\PortalAPI.dll" -NoNewWindow
