@@ -1,29 +1,41 @@
-name: CI - Build PortalAPI
+name: CI-QA - Build PortalAPI
 
+# Trigger on push or pull request to main branch
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, qa]
+    runs-on: windows-latest   # GitHub-hosted Windows runner
 
     steps:
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2️⃣ Setup .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
 
+      # 3️⃣ Build API
       - name: Build PortalAPI
         run: dotnet build PortalAPI/PortalAPI.csproj -c Release
 
+      # 4️⃣ Run tests (optional)
+      - name: Run Tests
+        run: dotnet test PortalAPI/PortalAPI.csproj --no-build --verbosity normal
+
+      # 5️⃣ Publish API (artifact)
       - name: Publish PortalAPI
         run: dotnet publish PortalAPI/PortalAPI.csproj -c Release -o publish
 
-      - name: Upload artifacts
+      # 6️⃣ Upload artifact for CD
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: portalapi-artifact
