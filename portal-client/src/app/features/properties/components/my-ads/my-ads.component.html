@@ -1,0 +1,143 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">My Property Ads</h1>
+          <p class="text-gray-600">Manage and view all your property listings</p>
+        </div>
+        <a
+          routerLink="/properties/create"
+          class="btn-primary inline-flex items-center space-x-2 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>Post New Ad</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading$ | async" class="flex items-center justify-center py-20">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+        <p class="text-gray-600">Loading your properties...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="(error$ | async) && !(isLoading$ | async)" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <p class="text-red-800">{{ error$ | async }}</p>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <ng-container *ngIf="(properties$ | async) as properties">
+    <div *ngIf="!(isLoading$ | async) && !(error$ | async) && properties.length === 0" class="text-center py-20">
+      <div class="max-w-md mx-auto">
+        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+          <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No properties yet</h3>
+        <p class="text-gray-600 mb-6">Start by posting your first property ad</p>
+        <a
+          routerLink="/properties/create"
+          class="btn-primary inline-flex items-center space-x-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>Post Your First Ad</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Properties Grid -->
+    <div *ngIf="!(isLoading$ | async) && !(error$ | async) && properties.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let property of properties" class="glass-card overflow-hidden group hover:shadow-2xl transition-all duration-300">
+        <!-- Image -->
+        <div class="relative h-64 overflow-hidden bg-gray-200">
+          <img
+            [src]="getPropertyImageUrl(property)"
+            [alt]="property.title"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop'"
+          />
+          <!-- Status Badge -->
+          <div class="absolute top-4 left-4">
+            <span [class]="'px-3 py-1 rounded-full text-xs font-semibold ' + getStatusBadgeClass(property)">
+              {{ property.type }}
+            </span>
+          </div>
+          <!-- Category Badge -->
+          <div class="absolute top-4 right-4">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/90 text-gray-700 backdrop-blur-sm">
+              {{ property.category }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <!-- Price and Title -->
+          <div class="mb-3">
+            <div class="text-2xl font-bold text-gray-900 mb-1">{{ formatPrice(property.price) }}</div>
+            <h3 class="text-lg font-semibold text-gray-900 line-clamp-1 mb-1">{{ property.title }}</h3>
+            <p class="text-sm text-gray-600 flex items-center space-x-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>{{ property.address }}, {{ property.city }}, {{ property.state }}</span>
+            </p>
+          </div>
+
+          <!-- Property Details -->
+          <div class="flex items-center space-x-4 mb-4 pb-4 border-b border-gray-200">
+            <div *ngIf="property.bedrooms" class="flex items-center space-x-1 text-gray-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+              </svg>
+              <span class="text-sm font-medium">{{ property.bedrooms }} Beds</span>
+            </div>
+            <div *ngIf="property.bathrooms" class="flex items-center space-x-1 text-gray-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+              <span class="text-sm font-medium">{{ property.bathrooms }} Baths</span>
+            </div>
+            <div *ngIf="property.area" class="flex items-center space-x-1 text-gray-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+              </svg>
+              <span class="text-sm font-medium">{{ property.area }}{{ property.areaUnit || ' sqft' }}</span>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-gray-500">
+              Posted {{ formatDate(property.createdAt) }}
+            </div>
+            <button 
+              (click)="viewDetails(property.id)"
+              class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+            >
+              View Details →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </ng-container>
+  </div>
+</div>
+

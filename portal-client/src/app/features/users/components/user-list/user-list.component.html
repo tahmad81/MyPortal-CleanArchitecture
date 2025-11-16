@@ -1,0 +1,49 @@
+<div class="glass-card p-8 shadow-2xl">
+  <div class="mb-8">
+    <p class="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-2">Team directory</p>
+    <h2 class="text-3xl font-bold text-gray-900 mb-2">People shaping Portal</h2>
+    <p class="text-gray-600">Review all registered users in the system.</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading$ | async" class="flex flex-col items-center justify-center py-16">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+    <p class="text-gray-600">Fetching teammates...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="(error$ | async) as errorMessage" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+    <p class="text-red-800">{{ errorMessage }}</p>
+  </div>
+
+  <!-- User Grid -->
+  <div *ngIf="!(isLoading$ | async) && !(error$ | async)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <article *ngFor="let user of (users$ | async)" class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-200">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-lg">
+            {{ (user.username.slice(0, 2) || '').toUpperCase() }}
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900">{{ user.username }}</h3>
+            <p class="text-sm text-gray-600">{{ user.email }}</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Active</span>
+          <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!(isLoading$ | async) && !(error$ | async) && ((users$ | async)?.length === 0)" class="text-center py-16">
+    <p class="text-gray-500">No users found.</p>
+  </div>
+</div>
+

@@ -13,4 +13,28 @@ namespace Portal.Application.Dtos
         public string CorrelationId { get; set; }="";
         public DateTime RespondedAt { get; set; } = DateTime.UtcNow;
     }
+
+    public class BaseResponse<T> : BaseResponse
+    {
+        public T? Data { get; set; }
+
+        public static BaseResponse<T> SuccessResult(T data, string message = "")
+        {
+            return new BaseResponse<T>
+            {
+                Success = true,
+                Message = message,
+                Data = data
+            };
+        }
+
+        public static BaseResponse<T> Failure(string message)
+        {
+            return new BaseResponse<T>
+            {
+                Success = false,
+                Message = message
+            };
+        }
+    }
 }

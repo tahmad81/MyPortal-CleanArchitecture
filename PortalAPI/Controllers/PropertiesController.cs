@@ -1,0 +1,83 @@
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Portal.Application.Commands.Properties;
+using Portal.Application.Dtos;
+using Portal.Application.Queries.Properties;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+
+namespace PortalAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PropertiesController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        public PropertiesController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpGet("latest")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetLatest([FromQuery] int count = 20)
+        {
+            var query = new GetLatestPropertiesQuery(count);
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("search")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Search([FromQuery] SearchPropertiesQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("my-ads")]
+        [Authorize]
+        public async Task<IActionResult> GetMyAds()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("sub")?.Value;
+            
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var query = new GetUserPropertiesQuery(userId);
+            var result = await _mediator.Send(query);
+            
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyRequest request)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("sub")?.Value;
+            
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var command = new CreatePropertyCommand(request, userId);
+            var result = await _mediator.Send(command);
+            
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return CreatedAtAction(nameof(GetMyAds), new { id = result.Data?.Id }, result);
+        }
+    }
+}
+

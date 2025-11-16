@@ -12,6 +12,7 @@ namespace Portal.Application.Interfaces
         Task<User?> GetByUserNameAsync(string username);
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByIdAsync(int id);
+        Task<IReadOnlyList<User>> GetAllAsync();
         Task AddAsync(User user);
     }
 }

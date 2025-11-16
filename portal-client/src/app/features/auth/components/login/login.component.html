@@ -1,0 +1,133 @@
+<div class="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
+  <div class="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
+    <!-- Left Side - Hero Section -->
+    <div class="hidden lg:block space-y-8">
+      <div class="space-y-4">
+        <p class="text-sm font-semibold text-blue-600 uppercase tracking-wider">Portal OS</p>
+        <h1 class="text-5xl font-bold text-gray-900 leading-tight">
+          Reimagine every employee touchpoint.
+        </h1>
+        <p class="text-lg text-gray-600 leading-relaxed">
+          See how ops teams handle onboarding, internal tooling, and customer journeys in one immersive space.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-6 pt-8">
+        <div class="text-center">
+          <div class="text-4xl font-bold text-blue-600 mb-2">98%</div>
+          <p class="text-sm text-gray-600">Happier onboardings</p>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-indigo-600 mb-2">4.7x</div>
+          <p class="text-sm text-gray-600">Automation lift</p>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-purple-600 mb-2">24/7</div>
+          <p class="text-sm text-gray-600">Global support</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="w-full max-w-md mx-auto">
+      <div class="glass-card p-8 shadow-2xl">
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
+          <p class="text-gray-600">Sign in to access your Portal workspace.</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate class="space-y-6">
+          <div>
+            <label for="userName" class="block text-sm font-medium text-gray-700 mb-2">
+              Username
+            </label>
+            <input
+              id="userName"
+              type="text"
+              formControlName="userName"
+              placeholder="your.username"
+              class="input-field"
+              [class.border-red-500]="isFieldInvalid('userName')"
+              [class.ring-red-500]="isFieldInvalid('userName')"
+            />
+            <small *ngIf="isFieldInvalid('userName')" class="mt-1 text-sm text-red-600 block">
+              Username is required.
+            </small>
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              placeholder="••••••••"
+              class="input-field"
+              [class.border-red-500]="isFieldInvalid('password')"
+              [class.ring-red-500]="isFieldInvalid('password')"
+            />
+            <small *ngIf="isFieldInvalid('password')" class="mt-1 text-sm text-red-600 block">
+              Password is required.
+            </small>
+          </div>
+
+          <button
+            type="submit"
+            [disabled]="loginForm.invalid || (isSubmitting$ | async)"
+            class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="(isSubmitting$ | async)" class="flex items-center justify-center space-x-2">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Signing in...</span>
+            </span>
+            <span *ngIf="!(isSubmitting$ | async)">Sign in</span>
+          </button>
+        </form>
+
+        <div class="mt-6 text-center text-sm text-gray-600">
+          Don't have an account?
+          <a routerLink="/auth/register" class="ml-1 font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+            Create one
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div 
+    *ngIf="toastMessage"
+    [class]="'fixed top-4 right-4 z-50 max-w-md w-full p-4 rounded-lg shadow-lg transform transition-all duration-300 ' + 
+             (toastMessage.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200')"
+  >
+    <div class="flex items-start">
+      <div [class]="'flex-shrink-0 ' + (toastMessage.type === 'success' ? 'text-green-400' : 'text-red-400')">
+        <svg *ngIf="toastMessage.type === 'success'" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <svg *ngIf="toastMessage.type === 'error'" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="ml-3 flex-1">
+        <p [class]="'text-sm font-medium ' + (toastMessage.type === 'success' ? 'text-green-800' : 'text-red-800')">
+          {{ toastMessage.message }}
+        </p>
+      </div>
+      <button 
+        (click)="toastMessage = null"
+        [class]="'ml-4 flex-shrink-0 ' + (toastMessage.type === 'success' ? 'text-green-400 hover:text-green-600' : 'text-red-400 hover:text-red-600')"
+      >
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
