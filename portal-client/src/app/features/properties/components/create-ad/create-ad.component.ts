@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CreatePropertyRequest } from '../../../../core/models/property.models';
 import { CreateAdFacade } from './store/create-ad.facade';
+import { LocationService } from '../../../../core/services/location.service';
 
 @Component({
   selector: 'app-create-ad',
@@ -15,6 +16,7 @@ import { CreateAdFacade } from './store/create-ad.facade';
 export class CreateAdComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly createAdFacade = inject(CreateAdFacade);
+  private readonly locationService = inject(LocationService);
   readonly router = inject(Router);
 
   readonly isSubmitting$ = this.createAdFacade.isSubmitting$;
@@ -26,6 +28,9 @@ export class CreateAdComponent implements OnInit {
   uploadedImages: File[] = [];
   imagePreviews: string[] = [];
   success = false;
+  
+  states: string[] = [];
+  cities: string[] = [];
 
   propertyTypes: Array<{ value: 'Rent' | 'Sale'; label: string; icon: string }> = [
     { value: 'Rent', label: 'For Rent', icon: '🏠' },
@@ -54,8 +59,21 @@ export class CreateAdComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.states = this.locationService.getStates();
     this.initForm();
     this.createAdFacade.reset();
+
+    // Subscribe to state changes to load cities
+    this.adForm.get('state')?.valueChanges.subscribe(state => {
+      if (state) {
+        this.cities = this.locationService.getCitiesByState(state);
+        // Reset city when state changes
+        this.adForm.patchValue({ city: '' });
+      } else {
+        this.cities = [];
+        this.adForm.patchValue({ city: '' });
+      }
+    });
 
     this.response$.subscribe(response => {
       if (response) {

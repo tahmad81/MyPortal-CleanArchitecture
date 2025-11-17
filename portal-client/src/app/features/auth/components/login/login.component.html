@@ -3,27 +3,42 @@
     <!-- Left Side - Hero Section -->
     <div class="hidden lg:block space-y-8">
       <div class="space-y-4">
-        <p class="text-sm font-semibold text-blue-600 uppercase tracking-wider">Portal OS</p>
+        <p class="text-sm font-semibold text-black uppercase tracking-wider">Property Portal</p>
         <h1 class="text-5xl font-bold text-gray-900 leading-tight">
-          Reimagine every employee touchpoint.
+          Find Your Dream Property Today
         </h1>
         <p class="text-lg text-gray-600 leading-relaxed">
-          See how ops teams handle onboarding, internal tooling, and customer journeys in one immersive space.
+          Discover thousands of verified properties for sale and rent. Your perfect home is just a click away.
         </p>
       </div>
 
       <div class="grid grid-cols-3 gap-6 pt-8">
         <div class="text-center">
-          <div class="text-4xl font-bold text-blue-600 mb-2">98%</div>
-          <p class="text-sm text-gray-600">Happier onboardings</p>
+          <div class="text-4xl font-bold text-black mb-2">10K+</div>
+          <p class="text-sm text-gray-600">Active Listings</p>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-bold text-indigo-600 mb-2">4.7x</div>
-          <p class="text-sm text-gray-600">Automation lift</p>
+          <div class="text-4xl font-bold text-black mb-2">50K+</div>
+          <p class="text-sm text-gray-600">Happy Customers</p>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-bold text-purple-600 mb-2">24/7</div>
-          <p class="text-sm text-gray-600">Global support</p>
+          <div class="text-4xl font-bold text-black mb-2">100%</div>
+          <p class="text-sm text-gray-600">Verified Properties</p>
+        </div>
+      </div>
+
+      <div class="pt-8 space-y-3">
+        <div class="flex items-center space-x-3">
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Browse verified properties with high-quality photos</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Connect directly with property owners</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Advanced search filters to find exactly what you need</span>
         </div>
       </div>
     </div>
@@ -32,8 +47,8 @@
     <div class="w-full max-w-md mx-auto">
       <div class="glass-card p-8 shadow-2xl">
         <div class="mb-8">
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
-          <p class="text-gray-600">Sign in to access your Portal workspace.</p>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+          <p class="text-gray-600">Sign in to continue your property search journey</p>
         </div>
 
         <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate class="space-y-6">
@@ -91,8 +106,8 @@
 
         <div class="mt-6 text-center text-sm text-gray-600">
           Don't have an account?
-          <a routerLink="/auth/register" class="ml-1 font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-            Create one
+          <a routerLink="/auth/register" class="ml-1 font-semibold text-black hover:text-gray-700 transition-colors">
+            Join us today
           </a>
         </div>
       </div>

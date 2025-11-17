@@ -1,17 +1,17 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+<div class="min-h-screen bg-gray-50 py-6">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
-    <div class="mb-8">
+    <div class="mb-6">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">My Property Ads</h1>
-          <p class="text-gray-600">Manage and view all your property listings</p>
+          <h1 class="text-2xl font-bold text-gray-900 mb-1">My Property Ads</h1>
+          <p class="text-sm text-gray-500">Manage and view all your property listings</p>
         </div>
         <a
           routerLink="/properties/create"
-          class="btn-primary inline-flex items-center space-x-2 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+          class="px-5 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium text-sm flex items-center space-x-2 uppercase tracking-wide"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
           <span>Post New Ad</span>
@@ -22,8 +22,8 @@
     <!-- Loading State -->
     <div *ngIf="isLoading$ | async" class="flex items-center justify-center py-20">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
-        <p class="text-gray-600">Loading your properties...</p>
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4"></div>
+        <p class="text-sm text-gray-600">Loading your properties...</p>
       </div>
     </div>
 
@@ -41,18 +41,18 @@
     <ng-container *ngIf="(properties$ | async) as properties">
     <div *ngIf="!(isLoading$ | async) && !(error$ | async) && properties.length === 0" class="text-center py-20">
       <div class="max-w-md mx-auto">
-        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
-          <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">No properties yet</h3>
-        <p class="text-gray-600 mb-6">Start by posting your first property ad</p>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">No properties yet</h3>
+        <p class="text-sm text-gray-600 mb-6">Start by posting your first property ad</p>
         <a
           routerLink="/properties/create"
-          class="btn-primary inline-flex items-center space-x-2"
+          class="px-5 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium text-sm inline-flex items-center space-x-2 uppercase tracking-wide"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
           <span>Post Your First Ad</span>
@@ -61,10 +61,10 @@
     </div>
 
     <!-- Properties Grid -->
-    <div *ngIf="!(isLoading$ | async) && !(error$ | async) && properties.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let property of properties" class="glass-card overflow-hidden group hover:shadow-2xl transition-all duration-300">
+    <div *ngIf="!(isLoading$ | async) && !(error$ | async) && properties.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div *ngFor="let property of properties" class="bg-white rounded-lg border border-gray-200 hover:border-black hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
         <!-- Image -->
-        <div class="relative h-64 overflow-hidden bg-gray-200">
+        <div class="relative h-56 overflow-hidden bg-gray-100">
           <img
             [src]="getPropertyImageUrl(property)"
             [alt]="property.title"
@@ -72,25 +72,25 @@
             onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop'"
           />
           <!-- Status Badge -->
-          <div class="absolute top-4 left-4">
-            <span [class]="'px-3 py-1 rounded-full text-xs font-semibold ' + getStatusBadgeClass(property)">
+          <div class="absolute top-3 left-3">
+            <span [class]="'px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide ' + getStatusBadgeClass(property)">
               {{ property.type }}
             </span>
           </div>
           <!-- Category Badge -->
-          <div class="absolute top-4 right-4">
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/90 text-gray-700 backdrop-blur-sm">
+          <div class="absolute top-3 right-3">
+            <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-black/80 text-white backdrop-blur-sm">
               {{ property.category }}
             </span>
           </div>
         </div>
 
         <!-- Content -->
-        <div class="p-6">
+        <div class="p-4">
           <!-- Price and Title -->
           <div class="mb-3">
-            <div class="text-2xl font-bold text-gray-900 mb-1">{{ formatPrice(property.price) }}</div>
-            <h3 class="text-lg font-semibold text-gray-900 line-clamp-1 mb-1">{{ property.title }}</h3>
+            <div class="text-2xl font-bold text-black mb-1.5">{{ formatPrice(property.price) }}</div>
+            <h3 class="text-lg font-bold text-gray-900 line-clamp-1 mb-1.5 group-hover:text-black transition-colors">{{ property.title }}</h3>
             <p class="text-sm text-gray-600 flex items-center space-x-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -123,22 +123,22 @@
           </div>
 
           <!-- Footer -->
-          <div class="flex items-center justify-between pt-4 border-t border-gray-200">
-            <div class="text-xs text-gray-500">
-              Posted {{ formatDate(property.createdAt) }}
+          <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+            <div class="text-xs text-gray-500 font-medium">
+              {{ formatDate(property.createdAt) }}
             </div>
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2">
               <button 
-                (click)="router.navigate(['/properties/edit', property.id])"
-                class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                (click)="$event.stopPropagation(); router.navigate(['/properties/edit', property.id])"
+                class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:border-black hover:bg-gray-50 transition-colors font-medium"
               >
                 Edit
               </button>
               <button 
-                (click)="viewDetails(property.id)"
-                class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                (click)="$event.stopPropagation(); viewDetails(property.id)"
+                class="px-3 py-1 text-xs bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-semibold uppercase tracking-wide"
               >
-                View Details →
+                View Details
               </button>
             </div>
           </div>

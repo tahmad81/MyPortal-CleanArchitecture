@@ -3,37 +3,54 @@
     <!-- Left Side - Hero Section -->
     <div class="hidden lg:block space-y-8">
       <div class="space-y-4">
-        <p class="text-sm font-semibold text-blue-600 uppercase tracking-wider">Portal OS</p>
+        <p class="text-sm font-semibold text-black uppercase tracking-wider">Property Portal</p>
         <h1 class="text-5xl font-bold text-gray-900 leading-tight">
-          Design the experience your teams deserve.
+          Start Your Property Journey
         </h1>
         <p class="text-lg text-gray-600 leading-relaxed">
-          Centralize onboarding, manage approvals, and measure productivity with a single beautiful workspace.
+          Join thousands of users finding and listing their dream properties. Create your account and unlock endless possibilities.
         </p>
       </div>
 
       <ul class="space-y-4 pt-8">
         <li class="flex items-center space-x-3">
-          <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
-          <span class="text-gray-700">SOC2-ready security controls</span>
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Post your property ads for free and reach thousands of buyers</span>
         </li>
         <li class="flex items-center space-x-3">
-          <span class="w-2 h-2 bg-indigo-600 rounded-full"></span>
-          <span class="text-gray-700">Built-in analytics & reporting</span>
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Save your favorite properties and get instant notifications</span>
         </li>
         <li class="flex items-center space-x-3">
-          <span class="w-2 h-2 bg-purple-600 rounded-full"></span>
-          <span class="text-gray-700">Fine-grained permission layers</span>
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Access advanced search tools to find your perfect match</span>
+        </li>
+        <li class="flex items-center space-x-3">
+          <span class="w-2 h-2 bg-black rounded-full"></span>
+          <span class="text-gray-700">Connect directly with property owners and agents</span>
         </li>
       </ul>
+
+      <div class="grid grid-cols-2 gap-6 pt-8">
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-3xl font-bold text-black mb-1">🏠</div>
+          <p class="text-sm font-semibold text-gray-900">Buy & Sell</p>
+          <p class="text-xs text-gray-600">Properties</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-3xl font-bold text-black mb-1">🔑</div>
+          <p class="text-sm font-semibold text-gray-900">Rent</p>
+          <p class="text-xs text-gray-600">Properties</p>
+        </div>
+      </div>
     </div>
 
     <!-- Right Side - Register Form -->
     <div class="w-full max-w-md mx-auto">
       <div class="glass-card p-8 shadow-2xl">
         <div class="mb-8">
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Create your account</h2>
-          <p class="text-gray-600">Join Portal to access your personalized dashboard.</p>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h2>
+          <p class="text-gray-600">Join our community and start exploring dream properties</p>
         </div>
 
         <form [formGroup]="registerForm" (ngSubmit)="submit()" novalidate class="space-y-5">
@@ -191,8 +208,8 @@
 
         <div class="mt-6 text-center text-sm text-gray-600">
           Already have an account?
-          <a routerLink="/auth/login" class="ml-1 font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-            Sign in
+          <a routerLink="/auth/login" class="ml-1 font-semibold text-black hover:text-gray-700 transition-colors">
+            Sign in here
           </a>
         </div>
       </div>

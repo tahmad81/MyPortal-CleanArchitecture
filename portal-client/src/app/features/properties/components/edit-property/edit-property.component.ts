@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { Property, UpdatePropertyRequest } from '../../../../core/models/property.models';
 import { EditPropertyFacade } from './store/edit-property.facade';
+import { LocationService } from '../../../../core/services/location.service';
 
 @Component({
   selector: 'app-edit-property',
@@ -15,6 +16,7 @@ import { EditPropertyFacade } from './store/edit-property.facade';
 export class EditPropertyComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly editPropertyFacade = inject(EditPropertyFacade);
+  private readonly locationService = inject(LocationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -32,6 +34,9 @@ export class EditPropertyComponent implements OnInit {
   imagePreviews: string[] = [];
   existingImages: Array<{ url: string; id: string }> = [];
   initialPhotoCount: number = 0;
+
+  states: string[] = [];
+  cities: string[] = [];
 
   areaUnits = [
     { value: 'sqft', label: 'Square Feet (sqft)' },
@@ -52,9 +57,25 @@ export class EditPropertyComponent implements OnInit {
       return;
     }
 
+    this.states = this.locationService.getStates();
     this.initForm();
     this.editPropertyFacade.reset();
     this.editPropertyFacade.load(this.propertyId);
+
+    // Subscribe to state changes to load cities
+    this.editForm.get('state')?.valueChanges.subscribe(state => {
+      if (state) {
+        this.cities = this.locationService.getCitiesByState(state);
+        // Reset city if state changes (but keep it if city is still valid)
+        const currentCity = this.editForm.get('city')?.value;
+        if (currentCity && !this.cities.includes(currentCity)) {
+          this.editForm.patchValue({ city: '' });
+        }
+      } else {
+        this.cities = [];
+        this.editForm.patchValue({ city: '' });
+      }
+    });
 
     // Load property data into form - use take(1) to ensure we only process once per load
     this.property$.subscribe(property => {
@@ -107,13 +128,19 @@ export class EditPropertyComponent implements OnInit {
   }
 
   populateForm(property: Property): void {
+    // Set state first to load cities
+    const state = property.state || '';
+    if (state) {
+      this.cities = this.locationService.getCitiesByState(state);
+    }
+
     this.editForm.patchValue({
       title: property.title || '',
       description: property.description || '',
       price: property.price || '',
       address: property.address || '',
       city: property.city || '',
-      state: property.state || '',
+      state: state,
       zipCode: property.zipCode || '',
       country: property.country || '',
       contactNumber: property.contactNumber || '',

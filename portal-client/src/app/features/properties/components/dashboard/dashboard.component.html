@@ -1,140 +1,134 @@
 <div class="min-h-[calc(100vh-8rem)]">
   <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-900 mb-2">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900 mb-1">
       <span *ngIf="!isSearchMode">Latest Properties</span>
       <span *ngIf="isSearchMode">Search Results</span>
     </h1>
-    <p class="text-gray-600">
-      <span *ngIf="!isSearchMode">Discover the newest property listings on our platform</span>
-      <span *ngIf="isSearchMode">Find your perfect property with our advanced search</span>
+    <p class="text-sm text-gray-500">
+      <span *ngIf="!isSearchMode">Discover the newest property listings</span>
+      <span *ngIf="isSearchMode">Find your perfect property</span>
     </p>
   </div>
 
   <!-- Search Bar -->
-  <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 mb-6">
     <form [formGroup]="searchForm" (ngSubmit)="performSearch()" class="space-y-4">
       <!-- Main Search -->
-      <div class="flex gap-4">
+      <div class="flex gap-2">
         <div class="flex-1">
           <input
             type="text"
             formControlName="searchTerm"
             placeholder="Search by title, description, city..."
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
           />
         </div>
         <button
           type="submit"
-          class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          class="px-5 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium text-sm flex items-center space-x-1.5"
         >
-          <span class="flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <span>Search</span>
-          </span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <span>Search</span>
         </button>
         <button
           type="button"
           (click)="toggleFilters()"
-          class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-black transition-colors text-sm flex items-center space-x-1.5"
         >
-          <span class="flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-            </svg>
-            <span>Filters</span>
-          </span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+          </svg>
+          <span>Filters</span>
         </button>
         <button
           *ngIf="isSearchMode"
           type="button"
           (click)="clearFilters()"
-          class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-black transition-colors text-sm flex items-center space-x-1.5"
         >
-          <span class="flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-            <span>Clear</span>
-          </span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <span>Clear</span>
         </button>
       </div>
 
       <!-- Advanced Filters -->
-      <div *ngIf="showFilters" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+      <div *ngIf="showFilters" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 mt-4 border-t border-gray-200">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-          <select formControlName="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">Type</label>
+          <select formControlName="type" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all">
             <option *ngFor="let type of propertyTypes" [value]="type.value">{{ type.label }}</option>
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-          <select formControlName="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">Category</label>
+          <select formControlName="category" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all">
             <option *ngFor="let cat of propertyCategories" [value]="cat.value">{{ cat.label }}</option>
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
-          <input
-            type="text"
-            formControlName="city"
-            placeholder="City"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">State</label>
+          <select formControlName="state" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all">
+            <option value="">All States</option>
+            <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+          </select>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
-          <input
-            type="text"
-            formControlName="state"
-            placeholder="State"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">City</label>
+          <select 
+            formControlName="city" 
+            [disabled]="!searchForm.get('state')?.value || cities.length === 0"
+            [class]="'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all ' + (searchForm.get('state')?.value && cities.length === 0 ? ' bg-gray-100 cursor-not-allowed' : '')"
+          >
+            <option value="">{{ searchForm.get('state')?.value ? (cities.length === 0 ? 'No cities available' : 'All Cities') : 'Select State First' }}</option>
+            <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+          </select>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Min Price (PKR)</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">Min Price (PKR)</label>
           <input
             type="number"
             formControlName="minPrice"
             placeholder="Min Price"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Max Price (PKR)</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">Max Price (PKR)</label>
           <input
             type="number"
             formControlName="maxPrice"
             placeholder="Max Price"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Min Bedrooms</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">Min Bedrooms</label>
           <input
             type="number"
             formControlName="minBedrooms"
             placeholder="Bedrooms"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Min Bathrooms</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">Min Bathrooms</label>
           <input
             type="number"
             formControlName="minBathrooms"
             placeholder="Bathrooms"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
           />
         </div>
-        <div class="md:col-span-2 lg:col-span-4 flex justify-end gap-4">
+        <div class="md:col-span-2 lg:col-span-4 flex justify-end gap-2">
           <button
             type="button"
             (click)="clearFilters()"
-            class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            class="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 hover:border-black transition-colors font-medium"
           >
             Clear Filters
           </button>
@@ -162,14 +156,14 @@
   </div>
 
   <!-- Properties Grid -->
-  <div *ngIf="!(isLoading$ | async) && !(error$ | async)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div *ngIf="!(isLoading$ | async) && !(error$ | async)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div
       *ngFor="let property of properties$ | async"
-      class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group cursor-pointer"
+      class="bg-white rounded-lg border border-gray-200 hover:border-black hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer"
       (click)="viewDetails(property.id)"
     >
       <!-- Property Image -->
-      <div class="relative h-64 overflow-hidden">
+      <div class="relative h-56 overflow-hidden bg-gray-100">
         <img
           [src]="getPropertyImageUrl(property)"
           [alt]="property.title"
@@ -177,35 +171,35 @@
           onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop'"
         />
         <!-- Type Badge -->
-        <div class="absolute top-4 left-4">
-          <span [class]="'px-3 py-1 rounded-full text-xs font-semibold ' + getStatusBadgeClass(property)">
+        <div class="absolute top-3 left-3">
+          <span [class]="'px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide ' + getStatusBadgeClass(property)">
             {{ property.type }}
           </span>
         </div>
         <!-- Category Icon -->
-        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2">
-          <span class="text-2xl">{{ getCategoryIcon(property.category) }}</span>
+        <div class="absolute top-3 right-3 bg-black/80 backdrop-blur-sm rounded-md p-1.5">
+          <span class="text-lg">{{ getCategoryIcon(property.category) }}</span>
         </div>
       </div>
 
       <!-- Property Details -->
-      <div class="p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-1.5 line-clamp-1 group-hover:text-black transition-colors">
           {{ property.title }}
         </h3>
-        <p class="text-2xl font-bold text-blue-600 mb-4">{{ formatPrice(property.price) }}</p>
+        <p class="text-2xl font-bold text-black mb-3">{{ formatPrice(property.price) }}</p>
         
         <!-- Location -->
-        <div class="flex items-center text-gray-600 mb-4">
-          <svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center text-gray-600 mb-3">
+          <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
           </svg>
-          <span class="text-sm">{{ property.city }}, {{ property.state }}</span>
+          <span class="text-xs font-medium">{{ property.city }}, {{ property.state }}</span>
         </div>
 
         <!-- Property Features -->
-        <div class="flex flex-wrap gap-4 mb-4 text-sm text-gray-600">
+        <div class="flex flex-wrap gap-3 mb-3 text-xs text-gray-600">
           <div *ngIf="property.bedrooms" class="flex items-center">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -227,10 +221,10 @@
         </div>
 
         <!-- Footer -->
-        <div class="flex items-center justify-between pt-4 border-t border-gray-200">
-          <span class="text-xs text-gray-500">{{ formatDate(property.createdAt) }}</span>
+        <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+          <span class="text-xs text-gray-500 font-medium">{{ formatDate(property.createdAt) }}</span>
           <button
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            class="px-4 py-1.5 bg-black text-white rounded-md hover:bg-gray-800 transition-colors text-xs font-semibold uppercase tracking-wide"
             (click)="$event.stopPropagation(); viewDetails(property.id)"
           >
             View Details

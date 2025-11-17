@@ -1,9 +1,9 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+<div class="min-h-screen bg-gray-50 py-6">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Post a Property Ad</h1>
-      <p class="text-gray-600">Create a listing for your property</p>
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-1">Post a Property Ad</h1>
+      <p class="text-sm text-gray-500">Create a listing for your property</p>
     </div>
 
     <!-- Success Message -->
@@ -30,49 +30,49 @@
     </div>
 
     <!-- Form -->
-    <form [formGroup]="adForm" (ngSubmit)="submit()" class="glass-card p-8 space-y-8">
+    <form [formGroup]="adForm" (ngSubmit)="submit()" class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
       <!-- Step 1: Property Type Selection -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-4">
+        <label class="block text-xs font-semibold text-gray-700 mb-3 uppercase tracking-wide">
           Select Property Type <span class="text-red-500">*</span>
         </label>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-3">
           <button
             *ngFor="let type of propertyTypes"
             type="button"
-            [class]="'p-6 rounded-xl border-2 transition-all duration-200 text-left ' + 
+            [class]="'p-4 rounded-lg border-2 transition-all duration-200 text-left ' + 
                      (selectedType === type.value 
-                       ? 'border-blue-600 bg-blue-50 shadow-lg' 
-                       : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow-md')"
+                       ? 'border-black bg-gray-50 shadow-md' 
+                       : 'border-gray-200 hover:border-black bg-white hover:shadow-sm')"
             (click)="selectType(type.value)"
           >
-            <div class="flex items-center space-x-4">
-              <span class="text-4xl">{{ type.icon }}</span>
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">{{ type.icon }}</span>
               <div>
-                <div class="text-lg font-semibold text-gray-900">{{ type.label }}</div>
-                <div class="text-sm text-gray-600">{{ type.value === 'Rent' ? 'Monthly rent' : 'Sale price' }}</div>
+                <div class="text-base font-semibold text-gray-900">{{ type.label }}</div>
+                <div class="text-xs text-gray-600">{{ type.value === 'Rent' ? 'Monthly rent' : 'Sale price' }}</div>
               </div>
             </div>
           </button>
         </div>
-        <div *ngIf="!selectedType && adForm.get('type')?.touched" class="mt-2 text-sm text-red-600">
+        <div *ngIf="!selectedType && adForm.get('type')?.touched" class="mt-2 text-xs text-red-600">
           Please select a property type
         </div>
       </div>
 
       <!-- Property Details -->
-      <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Property Details</h2>
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-gray-900 border-b border-gray-200 pb-2 uppercase tracking-wide">Property Details</h2>
 
         <!-- Category -->
         <div>
-          <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="category" class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
             Category <span class="text-red-500">*</span>
           </label>
           <select
             id="category"
             formControlName="category"
-            [class]="'input-field ' + (isFieldInvalid('category') ? 'border-red-300 focus:ring-red-500' : '')"
+            [class]="'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all ' + (isFieldInvalid('category') ? 'border-red-300 focus:ring-red-500' : '')"
           >
             <option value="">Select category</option>
             <option *ngFor="let cat of propertyCategories" [value]="cat.value">{{ cat.label }}</option>
@@ -84,7 +84,7 @@
 
         <!-- Title -->
         <div>
-          <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="title" class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
             Title <span class="text-red-500">*</span>
           </label>
           <input
@@ -92,16 +92,16 @@
             id="title"
             formControlName="title"
             placeholder="e.g., Beautiful 3BR House in Downtown"
-            [class]="'input-field ' + (isFieldInvalid('title') ? 'border-red-300 focus:ring-red-500' : '')"
+            [class]="'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all ' + (isFieldInvalid('title') ? 'border-red-300 focus:ring-red-500' : '')"
           />
-          <p *ngIf="isFieldInvalid('title')" class="mt-1 text-sm text-red-600">
+          <p *ngIf="isFieldInvalid('title')" class="mt-1 text-xs text-red-600">
             {{ getFieldError('title') }}
           </p>
         </div>
 
         <!-- Description -->
         <div>
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="description" class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
             Description <span class="text-red-500">*</span>
           </label>
           <textarea
@@ -109,7 +109,7 @@
             formControlName="description"
             rows="5"
             placeholder="Describe your property in detail..."
-            [class]="'input-field resize-none ' + (isFieldInvalid('description') ? 'border-red-300 focus:ring-red-500' : '')"
+            [class]="'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all resize-none ' + (isFieldInvalid('description') ? 'border-red-300 focus:ring-red-500' : '')"
           ></textarea>
           <p *ngIf="isFieldInvalid('description')" class="mt-1 text-sm text-red-600">
             {{ getFieldError('description') }}
@@ -118,7 +118,7 @@
 
         <!-- Price -->
         <div>
-          <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="price" class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
             {{ selectedType === 'Rent' ? 'Monthly Rent' : 'Sale Price' }} <span class="text-red-500">*</span>
           </label>
           <div class="relative">
@@ -129,7 +129,7 @@
               formControlName="price"
               placeholder="0.00"
               step="0.01"
-              class="input-field pl-8"
+              class="w-full px-3 py-2 pl-8 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
               [class]="(isFieldInvalid('price') ? 'border-red-300 focus:ring-red-500' : '')"
             />
           </div>
@@ -154,7 +154,7 @@
               id="address"
               formControlName="address"
               placeholder="Street address"
-              class="input-field"
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all"
               [class]="(isFieldInvalid('address') ? 'border-red-300 focus:ring-red-500' : '')"
             />
             <p *ngIf="isFieldInvalid('address')" class="mt-1 text-sm text-red-600">
@@ -162,39 +162,40 @@
             </p>
           </div>
 
-          <!-- City -->
+          <!-- State -->
           <div>
-            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
-              City <span class="text-red-500">*</span>
+            <label for="state" class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
+              State <span class="text-red-500">*</span>
             </label>
-            <input
-              type="text"
-              id="city"
-              formControlName="city"
-              placeholder="City"
-              class="input-field"
-              [class]="(isFieldInvalid('city') ? 'border-red-300 focus:ring-red-500' : '')"
-            />
-            <p *ngIf="isFieldInvalid('city')" class="mt-1 text-sm text-red-600">
-              {{ getFieldError('city') }}
+            <select
+              id="state"
+              formControlName="state"
+              [class]="'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all ' + (isFieldInvalid('state') ? 'border-red-300 focus:ring-red-500' : '')"
+            >
+              <option value="">Select State</option>
+              <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+            </select>
+            <p *ngIf="isFieldInvalid('state')" class="mt-1 text-xs text-red-600">
+              {{ getFieldError('state') }}
             </p>
           </div>
 
-          <!-- State -->
+          <!-- City -->
           <div>
-            <label for="state" class="block text-sm font-medium text-gray-700 mb-2">
-              State <span class="text-red-500">*</span>
+            <label for="city" class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
+              City <span class="text-red-500">*</span>
             </label>
-            <input
-              type="text"
-              id="state"
-              formControlName="state"
-              placeholder="State"
-              class="input-field"
-              [class]="(isFieldInvalid('state') ? 'border-red-300 focus:ring-red-500' : '')"
-            />
-            <p *ngIf="isFieldInvalid('state')" class="mt-1 text-sm text-red-600">
-              {{ getFieldError('state') }}
+            <select
+              id="city"
+              formControlName="city"
+              [disabled]="!adForm.get('state')?.value || cities.length === 0"
+              [class]="'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all ' + (isFieldInvalid('city') ? 'border-red-300 focus:ring-red-500' : '') + (adForm.get('state')?.value && cities.length === 0 ? ' bg-gray-100 cursor-not-allowed' : '')"
+            >
+              <option value="">{{ adForm.get('state')?.value ? (cities.length === 0 ? 'No cities available' : 'Select City') : 'Select State First' }}</option>
+              <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+            </select>
+            <p *ngIf="isFieldInvalid('city')" class="mt-1 text-xs text-red-600">
+              {{ getFieldError('city') }}
             </p>
           </div>
 
@@ -298,9 +299,9 @@
                 placeholder="0"
                 min="0"
                 step="0.01"
-                class="input-field flex-1"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all flex-1"
               />
-              <select formControlName="areaUnit" class="input-field w-32">
+              <select formControlName="areaUnit" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all w-32">
                 <option *ngFor="let unit of areaUnits" [value]="unit.value">{{ unit.label }}</option>
               </select>
             </div>
@@ -335,7 +336,7 @@
           <!-- Furnishing Status -->
           <div>
             <label for="furnishingStatus" class="block text-sm font-medium text-gray-700 mb-2">Furnishing Status</label>
-            <select id="furnishingStatus" formControlName="furnishingStatus" class="input-field">
+            <select id="furnishingStatus" formControlName="furnishingStatus" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-all">
               <option value="">Select status</option>
               <option *ngFor="let status of furnishingStatuses" [value]="status.value">{{ status.label }}</option>
             </select>
@@ -391,18 +392,18 @@
       </div>
 
       <!-- Submit Button -->
-      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+      <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
         <button
           type="button"
           (click)="router.navigate(['/properties/my-ads'])"
-          class="px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
+          class="px-5 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md transition-colors font-medium"
         >
           Cancel
         </button>
         <button
           type="submit"
           [disabled]="(isSubmitting$ | async) || adForm.invalid || !selectedType"
-          class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-5 py-2 text-sm bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-semibold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span *ngIf="!(isSubmitting$ | async)">Post Ad</span>
           <span *ngIf="isSubmitting$ | async" class="flex items-center space-x-2">

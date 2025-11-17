@@ -29,6 +29,7 @@ namespace Portal.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<Property>> GetByUserIdAsync(Guid userId)
         {
             return await _context.Properties
+                .Include(p => p.User)
                 .Include(p => p.Photos.OrderBy(ph => ph.DisplayOrder))
                 .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.CreatedAt)

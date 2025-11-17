@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Property, PropertyPhoto } from '../../../../core/models/property.models';
 import { DashboardFacade } from './store/dashboard.facade';
+import { LocationService } from '../../../../core/services/location.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,7 @@ import { DashboardFacade } from './store/dashboard.facade';
 })
 export class DashboardComponent implements OnInit {
   private readonly dashboardFacade = inject(DashboardFacade);
+  private readonly locationService = inject(LocationService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
@@ -24,6 +26,9 @@ export class DashboardComponent implements OnInit {
   searchForm!: FormGroup;
   showFilters = false;
   isSearchMode = false;
+
+  states: string[] = [];
+  cities: string[] = [];
 
   propertyTypes = [
     { value: '', label: 'All Types' },
@@ -42,9 +47,22 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.states = this.locationService.getStates();
     this.initForm();
     this.dashboardFacade.reset();
     this.dashboardFacade.load(20);
+
+    // Subscribe to state changes to load cities
+    this.searchForm.get('state')?.valueChanges.subscribe(state => {
+      if (state) {
+        this.cities = this.locationService.getCitiesByState(state);
+        // Reset city when state changes
+        this.searchForm.patchValue({ city: '' });
+      } else {
+        this.cities = [];
+        this.searchForm.patchValue({ city: '' });
+      }
+    });
   }
 
   initForm(): void {
