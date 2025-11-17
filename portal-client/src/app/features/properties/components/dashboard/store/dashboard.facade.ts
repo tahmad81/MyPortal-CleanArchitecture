@@ -17,6 +17,22 @@ export class DashboardFacade {
     this.store.dispatch(DashboardActions.loadLatest({ count }));
   }
 
+  search(filters: {
+    searchTerm?: string;
+    type?: string;
+    category?: string;
+    city?: string;
+    state?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minBedrooms?: number;
+    minBathrooms?: number;
+    page?: number;
+    pageSize?: number;
+  }): void {
+    this.store.dispatch(DashboardActions.search(filters));
+  }
+
   reset(): void {
     this.store.dispatch(DashboardActions.reset());
   }

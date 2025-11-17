@@ -123,16 +123,24 @@
           </div>
 
           <!-- Footer -->
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200">
             <div class="text-xs text-gray-500">
               Posted {{ formatDate(property.createdAt) }}
             </div>
-            <button 
-              (click)="viewDetails(property.id)"
-              class="text-blue-600 hover:text-blue-700 text-sm font-medium"
-            >
-              View Details →
-            </button>
+            <div class="flex items-center space-x-3">
+              <button 
+                (click)="router.navigate(['/properties/edit', property.id])"
+                class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              >
+                Edit
+              </button>
+              <button 
+                (click)="viewDetails(property.id)"
+                class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              >
+                View Details →
+              </button>
+            </div>
           </div>
         </div>
       </div>

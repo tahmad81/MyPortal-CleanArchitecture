@@ -34,6 +34,22 @@ export const dashboardFeature = createFeature({
       isLoading: false,
       error
     })),
+    on(DashboardActions.search, (state) => ({
+      ...state,
+      isLoading: true,
+      error: null
+    })),
+    on(DashboardActions.searchSuccess, (state, { response }) => ({
+      ...state,
+      properties: response.data || [],
+      isLoading: false,
+      error: null
+    })),
+    on(DashboardActions.searchFailure, (state, { error }) => ({
+      ...state,
+      isLoading: false,
+      error
+    })),
     on(DashboardActions.reset, () => initialState)
   )
 });

@@ -20,6 +20,18 @@ export class DashboardEffects {
       )
     )
   );
+
+  search$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DashboardActions.search),
+      switchMap((filters) =>
+        this.propertyService.search(filters).pipe(
+          map((response) => DashboardActions.searchSuccess({ response: response as any })),
+          catchError((err) => of(DashboardActions.searchFailure({ error: err.error?.message || err.message || 'Failed to search properties' })))
+        )
+      )
+    )
+  );
 }
 
 

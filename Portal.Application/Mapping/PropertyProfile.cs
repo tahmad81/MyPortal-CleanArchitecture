@@ -14,6 +14,12 @@ namespace Portal.Application.Mapping
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.Username : string.Empty))
+                .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(src => 
+                    src.User != null 
+                        ? (!string.IsNullOrWhiteSpace(src.User.FirstName) || !string.IsNullOrWhiteSpace(src.User.LastName)
+                            ? $"{src.User.FirstName ?? ""} {src.User.LastName ?? ""}".Trim()
+                            : string.Empty)
+                        : string.Empty))
                 .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos ?? new List<PropertyPhoto>()));
 
             CreateMap<PropertyPhoto, PropertyPhotoDto>()

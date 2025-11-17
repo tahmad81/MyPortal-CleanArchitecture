@@ -15,7 +15,8 @@ export const environment = {
       myAds: '/properties/my-ads',
       create: '/properties',
       latest: '/properties/latest',
-      search: '/properties/search'
+      search: '/properties/search',
+      detail: '/properties'
     }
   }
 };

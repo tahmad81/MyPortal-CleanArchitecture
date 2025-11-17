@@ -12,7 +12,7 @@ namespace Portal.Core.Entities
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty; // store hashed password
         public string Email { get; set; } = "User";
-
-
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 }

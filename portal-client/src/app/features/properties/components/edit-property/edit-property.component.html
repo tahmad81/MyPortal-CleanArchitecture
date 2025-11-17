@@ -1,0 +1,420 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Property Ad</h1>
+      <p class="text-gray-600">Update your property listing</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading$ | async" class="flex items-center justify-center py-20">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+        <p class="text-gray-600">Loading property details...</p>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="success$ | async" class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6">
+      <div class="flex items-center space-x-3">
+        <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <h3 class="text-lg font-semibold text-green-800">Property updated successfully!</h3>
+          <p class="text-green-700">Redirecting to your ads...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="(error$ | async) && !(success$ | async)" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <p class="text-red-800">{{ error$ | async }}</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!(isLoading$ | async)" [formGroup]="editForm" (ngSubmit)="submit()" class="glass-card p-8 space-y-8">
+      <!-- Property Details -->
+      <div class="space-y-6">
+        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Property Details</h2>
+
+        <!-- Title -->
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+            Title <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            placeholder="e.g., Beautiful 3BR House in Downtown"
+            [class]="'input-field ' + (isFieldInvalid('title') ? 'border-red-300 focus:ring-red-500' : '')"
+          />
+          <p *ngIf="isFieldInvalid('title')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('title') }}
+          </p>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+            Description <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="5"
+            placeholder="Describe your property in detail..."
+            [class]="'input-field resize-none ' + (isFieldInvalid('description') ? 'border-red-300 focus:ring-red-500' : '')"
+          ></textarea>
+          <p *ngIf="isFieldInvalid('description')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('description') }}
+          </p>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+            Price (PKR) <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">PKR</span>
+            <input
+              type="number"
+              id="price"
+              formControlName="price"
+              placeholder="0.00"
+              min="1"
+              step="0.01"
+              [class]="'input-field pl-16 ' + (isFieldInvalid('price') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+          </div>
+          <p *ngIf="isFieldInvalid('price')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('price') }}
+          </p>
+        </div>
+
+        <!-- Is Active -->
+        <div class="flex items-center space-x-3">
+          <input
+            type="checkbox"
+            id="isActive"
+            formControlName="isActive"
+            class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label for="isActive" class="text-sm font-medium text-gray-700">
+            Property is active (visible to others)
+          </label>
+        </div>
+      </div>
+
+      <!-- Location Details -->
+      <div class="space-y-6">
+        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Location</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Address -->
+          <div class="md:col-span-2">
+            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+              Address <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="address"
+              formControlName="address"
+              placeholder="Street address"
+              [class]="'input-field ' + (isFieldInvalid('address') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+            <p *ngIf="isFieldInvalid('address')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('address') }}
+            </p>
+          </div>
+
+          <!-- City -->
+          <div>
+            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
+              City <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              placeholder="City"
+              [class]="'input-field ' + (isFieldInvalid('city') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+            <p *ngIf="isFieldInvalid('city')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('city') }}
+            </p>
+          </div>
+
+          <!-- State -->
+          <div>
+            <label for="state" class="block text-sm font-medium text-gray-700 mb-2">
+              State <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="state"
+              formControlName="state"
+              placeholder="State"
+              [class]="'input-field ' + (isFieldInvalid('state') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+            <p *ngIf="isFieldInvalid('state')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('state') }}
+            </p>
+          </div>
+
+          <!-- Zip Code -->
+          <div>
+            <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-2">
+              Zip Code <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="zipCode"
+              formControlName="zipCode"
+              placeholder="12345"
+              [class]="'input-field ' + (isFieldInvalid('zipCode') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+            <p *ngIf="isFieldInvalid('zipCode')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('zipCode') }}
+            </p>
+          </div>
+
+          <!-- Country -->
+          <div>
+            <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
+              Country <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="country"
+              formControlName="country"
+              placeholder="Pakistan"
+              [class]="'input-field ' + (isFieldInvalid('country') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+            <p *ngIf="isFieldInvalid('country')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('country') }}
+            </p>
+          </div>
+
+          <!-- Contact Number -->
+          <div class="md:col-span-2">
+            <label for="contactNumber" class="block text-sm font-medium text-gray-700 mb-2">
+              Contact Number <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              id="contactNumber"
+              formControlName="contactNumber"
+              placeholder="+92 300 1234567 or 0300-1234567"
+              [class]="'input-field ' + (isFieldInvalid('contactNumber') ? 'border-red-300 focus:ring-red-500' : '')"
+            />
+            <p *ngIf="isFieldInvalid('contactNumber')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('contactNumber') }}
+            </p>
+            <p class="mt-1 text-xs text-gray-500">Enter your contact number for inquiries</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Features -->
+      <div class="space-y-6">
+        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Property Features</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Bedrooms -->
+          <div>
+            <label for="bedrooms" class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+            <input
+              type="number"
+              id="bedrooms"
+              formControlName="bedrooms"
+              placeholder="0"
+              min="0"
+              class="input-field"
+            />
+          </div>
+
+          <!-- Bathrooms -->
+          <div>
+            <label for="bathrooms" class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
+            <input
+              type="number"
+              id="bathrooms"
+              formControlName="bathrooms"
+              placeholder="0"
+              min="0"
+              step="0.5"
+              class="input-field"
+            />
+          </div>
+
+          <!-- Area -->
+          <div>
+            <label for="area" class="block text-sm font-medium text-gray-700 mb-2">Area</label>
+            <div class="flex space-x-2">
+              <input
+                type="number"
+                id="area"
+                formControlName="area"
+                placeholder="0"
+                min="0"
+                step="0.01"
+                class="input-field flex-1"
+              />
+              <select formControlName="areaUnit" class="input-field w-32">
+                <option *ngFor="let unit of areaUnits" [value]="unit.value">{{ unit.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Year Built -->
+          <div>
+            <label for="yearBuilt" class="block text-sm font-medium text-gray-700 mb-2">Year Built</label>
+            <input
+              type="number"
+              id="yearBuilt"
+              formControlName="yearBuilt"
+              placeholder="YYYY"
+              min="1800"
+              max="2100"
+              class="input-field"
+            />
+          </div>
+
+          <!-- Parking -->
+          <div>
+            <label for="parking" class="block text-sm font-medium text-gray-700 mb-2">Parking</label>
+            <input
+              type="text"
+              id="parking"
+              formControlName="parking"
+              placeholder="e.g., 2 car garage"
+              class="input-field"
+            />
+          </div>
+
+          <!-- Furnishing Status -->
+          <div>
+            <label for="furnishingStatus" class="block text-sm font-medium text-gray-700 mb-2">Furnishing Status</label>
+            <select id="furnishingStatus" formControlName="furnishingStatus" class="input-field">
+              <option value="">Select status</option>
+              <option *ngFor="let status of furnishingStatuses" [value]="status.value">{{ status.label }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo Upload -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3 mb-4">Photos</h2>
+        <div class="space-y-4">
+          <!-- Existing Images -->
+          <div *ngIf="existingImages.length > 0" class="mb-6">
+            <p class="text-sm font-medium text-gray-700 mb-3">Current Photos</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div *ngFor="let image of existingImages; let i = index" class="relative group">
+                <img [src]="image.url" [alt]="'Existing photo ' + (i + 1)" class="w-full h-32 object-cover rounded-lg shadow-md" />
+                <button
+                  type="button"
+                  (click)="removeExistingImage(i)"
+                  class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                  title="Remove this photo"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">Removing existing photos will replace them with new uploads</p>
+          </div>
+
+          <!-- Upload New Images -->
+          <div class="flex items-center justify-center w-full">
+            <label
+              for="file-upload"
+              class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+            >
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="mb-2 text-sm text-gray-500">
+                  <span class="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p class="text-xs text-gray-500">
+                  PNG, JPG, GIF up to 10MB (Max {{ 10 - (existingImages.length + uploadedImages.length) }} images remaining)
+                </p>
+              </div>
+              <input
+                id="file-upload"
+                type="file"
+                class="hidden"
+                multiple
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                [disabled]="existingImages.length + uploadedImages.length >= 10"
+              />
+            </label>
+          </div>
+
+          <!-- New Image Previews -->
+          <div *ngIf="imagePreviews.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div *ngFor="let preview of imagePreviews; let i = index" class="relative group">
+              <img [src]="preview" [alt]="'New photo ' + (i + 1)" class="w-full h-32 object-cover rounded-lg shadow-md" />
+              <button
+                type="button"
+                (click)="removeNewImage(i)"
+                class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                title="Remove this photo"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+              <span class="absolute bottom-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">New</span>
+            </div>
+          </div>
+
+          <!-- Info Message -->
+          <div *ngIf="existingImages.length === 0 && uploadedImages.length === 0" class="text-center py-4 text-gray-500 text-sm">
+            <p>No photos uploaded. Add photos to showcase your property.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        <button
+          type="button"
+          (click)="router.navigate(['/properties/my-ads'])"
+          class="px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="(isSubmitting$ | async) || editForm.invalid"
+          class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span *ngIf="!(isSubmitting$ | async)">Update Property</span>
+          <span *ngIf="isSubmitting$ | async" class="flex items-center space-x-2">
+            <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Updating...</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

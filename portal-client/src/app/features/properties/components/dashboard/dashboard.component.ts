@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Property, PropertyPhoto } from '../../../../core/models/property.models';
 import { DashboardFacade } from './store/dashboard.facade';
@@ -7,20 +8,89 @@ import { DashboardFacade } from './store/dashboard.facade';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   private readonly dashboardFacade = inject(DashboardFacade);
   private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
   readonly properties$ = this.dashboardFacade.properties$;
   readonly isLoading$ = this.dashboardFacade.isLoading$;
   readonly error$ = this.dashboardFacade.error$;
 
+  searchForm!: FormGroup;
+  showFilters = false;
+  isSearchMode = false;
+
+  propertyTypes = [
+    { value: '', label: 'All Types' },
+    { value: 'Rent', label: 'For Rent' },
+    { value: 'Sale', label: 'For Sale' }
+  ];
+
+  propertyCategories = [
+    { value: '', label: 'All Categories' },
+    { value: 'House', label: 'House' },
+    { value: 'Apartment', label: 'Apartment' },
+    { value: 'Villa', label: 'Villa' },
+    { value: 'Land', label: 'Land' },
+    { value: 'Commercial', label: 'Commercial' },
+    { value: 'Other', label: 'Other' }
+  ];
+
   ngOnInit(): void {
+    this.initForm();
     this.dashboardFacade.reset();
+    this.dashboardFacade.load(20);
+  }
+
+  initForm(): void {
+    this.searchForm = this.fb.group({
+      searchTerm: [''],
+      type: [''],
+      category: [''],
+      city: [''],
+      state: [''],
+      minPrice: [''],
+      maxPrice: [''],
+      minBedrooms: [''],
+      minBathrooms: ['']
+    });
+  }
+
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
+  performSearch(): void {
+    this.isSearchMode = true;
+    const formValue = this.searchForm.getRawValue();
+    const filters: any = {
+      searchTerm: formValue.searchTerm?.trim() || undefined,
+      type: formValue.type || undefined,
+      category: formValue.category || undefined,
+      city: formValue.city?.trim() || undefined,
+      state: formValue.state?.trim() || undefined,
+      minPrice: formValue.minPrice ? parseFloat(formValue.minPrice) : undefined,
+      maxPrice: formValue.maxPrice ? parseFloat(formValue.maxPrice) : undefined,
+      minBedrooms: formValue.minBedrooms ? parseInt(formValue.minBedrooms) : undefined,
+      minBathrooms: formValue.minBathrooms ? parseInt(formValue.minBathrooms) : undefined,
+      page: 1,
+      pageSize: 20
+    };
+
+    // Remove undefined values
+    Object.keys(filters).forEach(key => filters[key] === undefined && delete filters[key]);
+
+    this.dashboardFacade.search(filters);
+  }
+
+  clearFilters(): void {
+    this.searchForm.reset();
+    this.isSearchMode = false;
     this.dashboardFacade.load(20);
   }
 

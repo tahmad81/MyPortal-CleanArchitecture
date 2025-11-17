@@ -2,6 +2,7 @@ export interface Property {
   id: string;
   userId: string;
   userName: string;
+  userFullName: string;
   title: string;
   description: string;
   type: 'Rent' | 'Sale';
@@ -64,6 +65,33 @@ export interface CreatePropertyRequest {
   parking?: string;
   furnishingStatus?: string;
   contactNumber?: string;
+  photos?: PropertyPhotoRequest[];
+}
+
+export interface PropertyListResponse {
+  success: boolean;
+  message: string;
+  data: Property[];
+}
+
+export interface UpdatePropertyRequest {
+  title: string;
+  description: string;
+  price: number;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  area?: number;
+  areaUnit?: string;
+  yearBuilt?: number;
+  parking?: string;
+  furnishingStatus?: string;
+  contactNumber?: string;
+  isActive: boolean;
   photos?: PropertyPhotoRequest[];
 }
 

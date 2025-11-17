@@ -16,6 +16,10 @@ import { DashboardEffects } from './features/properties/components/dashboard/sto
 import { dashboardFeature } from './features/properties/components/dashboard/store/dashboard.reducer';
 import { SearchEffects } from './features/properties/components/search/store/search.effects';
 import { searchFeature } from './features/properties/components/search/store/search.reducer';
+import { PropertyDetailEffects } from './features/properties/components/property-detail/store/property-detail.effects';
+import { propertyDetailFeature } from './features/properties/components/property-detail/store/property-detail.reducer';
+import { EditPropertyEffects } from './features/properties/components/edit-property/store/edit-property.effects';
+import { editPropertyFeature } from './features/properties/components/edit-property/store/edit-property.reducer';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -53,10 +57,23 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'properties/edit/:id',
+    loadComponent: () =>
+      import('./features/properties/components/edit-property/edit-property.component').then(m => m.EditPropertyComponent),
+    providers: [provideState(editPropertyFeature), provideEffects(EditPropertyEffects)],
+    canActivate: [authGuard]
+  },
+  {
     path: 'properties/search',
     loadComponent: () =>
       import('./features/properties/components/search/search.component').then(m => m.SearchComponent),
     providers: [provideState(searchFeature), provideEffects(SearchEffects)]
+  },
+  {
+    path: 'properties/:id',
+    loadComponent: () =>
+      import('./features/properties/components/property-detail/property-detail.component').then(m => m.PropertyDetailComponent),
+    providers: [provideState(propertyDetailFeature), provideEffects(PropertyDetailEffects)]
   },
   {
     path: '',

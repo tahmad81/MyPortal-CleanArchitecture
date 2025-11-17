@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Portal.Application.Converters;
 
 namespace Portal.Application.Dtos
 {
@@ -8,6 +10,7 @@ namespace Portal.Application.Dtos
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string UserName { get; set; } = string.Empty;
+        public string UserFullName { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty; // Rent or Sale
@@ -48,7 +51,10 @@ namespace Portal.Application.Dtos
     public class PropertyPhotoRequest
     {
         public string FileName { get; set; } = string.Empty;
+        
+        // ByteArrayConverter is registered globally in Program.cs
         public byte[] ImageData { get; set; } = Array.Empty<byte>();
+        
         public string ContentType { get; set; } = string.Empty;
         public int DisplayOrder { get; set; }
         public bool IsPrimary { get; set; }
@@ -96,6 +102,7 @@ namespace Portal.Application.Dtos
         public string? FurnishingStatus { get; set; }
         public string? ContactNumber { get; set; }
         public bool IsActive { get; set; }
+        public List<PropertyPhotoRequest>? Photos { get; set; }
     }
 }
 

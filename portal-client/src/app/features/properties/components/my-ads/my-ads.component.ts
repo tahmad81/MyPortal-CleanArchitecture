@@ -13,7 +13,7 @@ import { MyAdsFacade } from './store/my-ads.facade';
 })
 export class MyAdsComponent implements OnInit {
   private readonly myAdsFacade = inject(MyAdsFacade);
-  private readonly router = inject(Router);
+  readonly router = inject(Router);
 
   readonly properties$ = this.myAdsFacade.properties$;
   readonly isLoading$ = this.myAdsFacade.isLoading$;

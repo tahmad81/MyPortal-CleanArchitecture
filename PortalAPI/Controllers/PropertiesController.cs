@@ -38,6 +38,21 @@ namespace PortalAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var query = new GetPropertyByIdQuery(id);
+            var result = await _mediator.Send(query);
+            
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
+            
+            return Ok(result);
+        }
+
         [HttpGet("my-ads")]
         [Authorize]
         public async Task<IActionResult> GetMyAds()
@@ -77,6 +92,34 @@ namespace PortalAPI.Controllers
             }
 
             return CreatedAtAction(nameof(GetMyAds), new { id = result.Data?.Id }, result);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProperty(Guid id, [FromBody] UpdatePropertyRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("sub")?.Value;
+            
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var command = new UpdatePropertyCommand(id, userId, request);
+            var result = await _mediator.Send(command);
+            
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
     }
 }

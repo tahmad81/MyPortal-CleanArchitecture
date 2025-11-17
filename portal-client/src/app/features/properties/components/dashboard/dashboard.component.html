@@ -1,8 +1,146 @@
 <div class="min-h-[calc(100vh-8rem)]">
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-900 mb-2">Latest Properties</h1>
-    <p class="text-gray-600">Discover the newest property listings on our platform</p>
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">
+      <span *ngIf="!isSearchMode">Latest Properties</span>
+      <span *ngIf="isSearchMode">Search Results</span>
+    </h1>
+    <p class="text-gray-600">
+      <span *ngIf="!isSearchMode">Discover the newest property listings on our platform</span>
+      <span *ngIf="isSearchMode">Find your perfect property with our advanced search</span>
+    </p>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <form [formGroup]="searchForm" (ngSubmit)="performSearch()" class="space-y-4">
+      <!-- Main Search -->
+      <div class="flex gap-4">
+        <div class="flex-1">
+          <input
+            type="text"
+            formControlName="searchTerm"
+            placeholder="Search by title, description, city..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <button
+          type="submit"
+          class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+        >
+          <span class="flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <span>Search</span>
+          </span>
+        </button>
+        <button
+          type="button"
+          (click)="toggleFilters()"
+          class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <span class="flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+            </svg>
+            <span>Filters</span>
+          </span>
+        </button>
+        <button
+          *ngIf="isSearchMode"
+          type="button"
+          (click)="clearFilters()"
+          class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <span class="flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <span>Clear</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- Advanced Filters -->
+      <div *ngIf="showFilters" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+          <select formControlName="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <option *ngFor="let type of propertyTypes" [value]="type.value">{{ type.label }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+          <select formControlName="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <option *ngFor="let cat of propertyCategories" [value]="cat.value">{{ cat.label }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+          <input
+            type="text"
+            formControlName="city"
+            placeholder="City"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+          <input
+            type="text"
+            formControlName="state"
+            placeholder="State"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Min Price (PKR)</label>
+          <input
+            type="number"
+            formControlName="minPrice"
+            placeholder="Min Price"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Max Price (PKR)</label>
+          <input
+            type="number"
+            formControlName="maxPrice"
+            placeholder="Max Price"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Min Bedrooms</label>
+          <input
+            type="number"
+            formControlName="minBedrooms"
+            placeholder="Bedrooms"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Min Bathrooms</label>
+          <input
+            type="number"
+            formControlName="minBathrooms"
+            placeholder="Bathrooms"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div class="md:col-span-2 lg:col-span-4 flex justify-end gap-4">
+          <button
+            type="button"
+            (click)="clearFilters()"
+            class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Clear Filters
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 
   <!-- Loading State -->
@@ -105,11 +243,24 @@
   <!-- Empty State -->
   <div *ngIf="!(isLoading$ | async) && !(error$ | async) && (properties$ | async)?.length === 0" class="text-center py-20">
     <div class="max-w-md mx-auto">
-      <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg *ngIf="!isSearchMode" class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
       </svg>
+      <svg *ngIf="isSearchMode" class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
       <h3 class="text-xl font-semibold text-gray-900 mb-2">No Properties Found</h3>
-      <p class="text-gray-600 mb-6">There are no properties available at the moment. Check back later!</p>
+      <p class="text-gray-600 mb-6">
+        <span *ngIf="!isSearchMode">There are no properties available at the moment. Check back later!</span>
+        <span *ngIf="isSearchMode">Try adjusting your search criteria or filters</span>
+      </p>
+      <button
+        *ngIf="isSearchMode"
+        (click)="clearFilters()"
+        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Clear Filters
+      </button>
     </div>
   </div>
 </div>
