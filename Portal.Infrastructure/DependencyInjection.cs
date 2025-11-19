@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using Portal.Application.Interfaces;
+using Portal.Application.Services;
 using Portal.Infrastructure.Common;
 using Portal.Infrastructure.Persistence;
 using Portal.Infrastructure.Persistence.Repositories;
+using Portal.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +27,12 @@ namespace Portal.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+
+            // Register reCAPTCHA service with HttpClient
+            services.AddHttpClient<IRecaptchaService, RecaptchaService>();
+            
+            // Register Phone Verification service
+            services.AddScoped<IPhoneVerificationService, PhoneVerificationService>();
 
             return services;
         }

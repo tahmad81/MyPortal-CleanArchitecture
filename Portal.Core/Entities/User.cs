@@ -14,5 +14,7 @@ namespace Portal.Core.Entities
         public string Email { get; set; } = "User";
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public bool PhoneVerified { get; set; } = false;
     }
 }

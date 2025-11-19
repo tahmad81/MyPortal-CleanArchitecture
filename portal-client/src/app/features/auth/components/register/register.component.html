@@ -131,6 +131,99 @@
             </small>
           </div>
 
+          <!-- Phone Number -->
+          <div>
+            <label for="phoneNumber" class="block text-sm font-medium text-gray-700 mb-2">
+              Phone Number <span class="text-red-500">*</span>
+            </label>
+            <div class="flex gap-2">
+              <input
+                id="phoneNumber"
+                type="tel"
+                formControlName="phoneNumber"
+                placeholder="+923001234567"
+                class="input-field flex-1"
+                [class.border-red-500]="getControl('phoneNumber')?.touched && getControl('phoneNumber')?.invalid"
+                [class.ring-red-500]="getControl('phoneNumber')?.touched && getControl('phoneNumber')?.invalid"
+              />
+              <button
+                type="button"
+                (click)="sendOTP()"
+                [disabled]="getControl('phoneNumber')?.invalid || sendingOTP || otpVerified"
+                class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                <span *ngIf="sendingOTP" class="flex items-center space-x-1">
+                  <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Sending...</span>
+                </span>
+                <span *ngIf="!sendingOTP">Send OTP</span>
+              </button>
+            </div>
+            <small *ngIf="getControl('phoneNumber')?.touched && getControl('phoneNumber')?.invalid" class="mt-1 text-sm text-red-600 block">
+              Please provide a valid phone number (10-15 digits, with optional + prefix).
+            </small>
+            <p class="mt-1 text-xs text-gray-500">Include country code (e.g., +92 for Pakistan)</p>
+          </div>
+
+          <!-- OTP Code (shown after OTP is sent) -->
+          <div *ngIf="otpSent" class="animate-fade-in">
+            <label for="otpCode" class="block text-sm font-medium text-gray-700 mb-2">
+              OTP Code <span class="text-red-500">*</span>
+            </label>
+            <div class="flex gap-2">
+              <input
+                id="otpCode"
+                type="text"
+                formControlName="otpCode"
+                placeholder="000000"
+                maxlength="6"
+                class="input-field flex-1"
+                [class.border-red-500]="getControl('otpCode')?.touched && getControl('otpCode')?.invalid"
+                [class.ring-red-500]="getControl('otpCode')?.touched && getControl('otpCode')?.invalid"
+              />
+              <button
+                type="button"
+                (click)="verifyOTP()"
+                [disabled]="getControl('otpCode')?.invalid || verifyingOTP || otpVerified"
+                class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                <span *ngIf="verifyingOTP" class="flex items-center space-x-1">
+                  <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Verifying...</span>
+                </span>
+                <span *ngIf="!verifyingOTP && !otpVerified">Verify OTP</span>
+                <span *ngIf="otpVerified" class="flex items-center space-x-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>Verified</span>
+                </span>
+              </button>
+            </div>
+            <small *ngIf="getControl('otpCode')?.touched && getControl('otpCode')?.invalid" class="mt-1 text-sm text-red-600 block">
+              Please enter a valid 6-digit OTP code.
+            </small>
+            <p *ngIf="otpVerified" class="mt-1 text-xs text-green-600 font-medium">✓ Phone number verified successfully!</p>
+          </div>
+
+          <!-- reCAPTCHA Container -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Security Verification <span class="text-red-500">*</span>
+            </label>
+            <div id="recaptcha-container" class="mb-2"></div>
+            <p class="text-xs text-gray-500">Please complete the reCAPTCHA verification to proceed.</p>
+          </div>
+
+          <!-- Hidden Firebase reCAPTCHA container for Phone Auth -->
+          <div id="recaptcha-phone-container" class="hidden"></div>
+
           <!-- Password and Confirm Password -->
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -192,7 +285,7 @@
           <!-- Submit Button -->
           <button
             type="submit"
-            [disabled]="registerForm.invalid || (isSubmitting$ | async)"
+            [disabled]="registerForm.invalid || (isSubmitting$ | async) || !otpVerified || !recaptchaToken"
             class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span *ngIf="(isSubmitting$ | async)" class="flex items-center justify-center space-x-2">

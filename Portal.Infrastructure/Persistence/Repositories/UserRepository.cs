@@ -21,6 +21,9 @@ namespace Portal.Infrastructure.Persistence.Repositories
         public async Task<User?> GetByEmailAsync(string email) =>
             await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
+        public async Task<User?> GetByPhoneNumberAsync(string phoneNumber) =>
+            await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+
         public async Task<User?> GetByIdAsync(int id) =>
             await _context.Users.FindAsync(id);
 

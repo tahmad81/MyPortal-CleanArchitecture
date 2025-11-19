@@ -4,6 +4,9 @@ export interface RegisterRequest {
   lastName?: string;
   email: string;
   password: string;
+  phoneNumber: string;
+  recaptchaToken: string;
+  firebaseIdToken: string;
 }
 
 export interface RegisterResponse {
