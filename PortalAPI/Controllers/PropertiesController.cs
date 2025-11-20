@@ -121,6 +121,57 @@ namespace PortalAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("{id}/remove")]
+        [Authorize]
+        public async Task<IActionResult> RemoveProperty(Guid id, [FromBody] RemovePropertyRequest request)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("sub")?.Value;
+            
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var command = new RemovePropertyCommand(id, userId, request.RemoveReason);
+            var result = await _mediator.Send(command);
+            
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/reactivate")]
+        [Authorize]
+        public async Task<IActionResult> ReactivateProperty(Guid id)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst("sub")?.Value;
+            
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var command = new ReactivatePropertyCommand(id, userId);
+            var result = await _mediator.Send(command);
+            
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+    }
+
+    public class RemovePropertyRequest
+    {
+        public string RemoveReason { get; set; } = string.Empty;
     }
 }
 

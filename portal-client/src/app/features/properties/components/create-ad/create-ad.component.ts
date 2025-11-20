@@ -28,13 +28,14 @@ export class CreateAdComponent implements OnInit {
   uploadedImages: File[] = [];
   imagePreviews: string[] = [];
   success = false;
+  agreementLanguage: 'en' | 'ur' = 'en';
   
   states: string[] = [];
   cities: string[] = [];
 
   propertyTypes: Array<{ value: 'Rent' | 'Sale'; label: string; icon: string }> = [
     { value: 'Rent', label: 'For Rent', icon: '🏠' },
-    { value: 'Sale', label: 'For Sale', icon: '💰' }
+    { value: 'Sale', label: 'For Sale', icon: '🏘️' }
   ];
 
   propertyCategories = [
@@ -47,9 +48,9 @@ export class CreateAdComponent implements OnInit {
   ];
 
   areaUnits = [
-    { value: 'sqft', label: 'Square Feet (sqft)' },
-    { value: 'sqm', label: 'Square Meters (sqm)' },
-    { value: 'marla', label: 'Marla' }
+    { value: 'sqft', label: 'Square Feet (sqft)', shortLabel: 'sqft' },
+    { value: 'sqm', label: 'Square Meters (sqm)', shortLabel: 'sqm' },
+    { value: 'marla', label: 'Marla', shortLabel: 'Marla' }
   ];
 
   furnishingStatuses = [
@@ -111,7 +112,8 @@ export class CreateAdComponent implements OnInit {
       areaUnit: ['marla'],
       yearBuilt: [''],
       parking: [''],
-      furnishingStatus: ['']
+      furnishingStatus: [''],
+      agreementAccepted: [false, Validators.requiredTrue]
     });
   }
 
@@ -233,6 +235,7 @@ export class CreateAdComponent implements OnInit {
       yearBuilt: formValue.yearBuilt ? parseInt(formValue.yearBuilt) : undefined,
       parking: formValue.parking || undefined,
       furnishingStatus: formValue.furnishingStatus || undefined,
+      agreementAccepted: formValue.agreementAccepted,
       photos: photos.length > 0 ? photos : undefined
     };
 
@@ -249,6 +252,120 @@ export class CreateAdComponent implements OnInit {
       reader.onerror = reject;
       reader.readAsArrayBuffer(file);
     });
+  }
+
+  toggleAgreementLanguage(): void {
+    this.agreementLanguage = this.agreementLanguage === 'en' ? 'ur' : 'en';
+  }
+
+  getAgreementText(): any {
+    if (this.agreementLanguage === 'ur') {
+      return {
+        title: 'صارف معاہدہ اور خدمات کی شرائط',
+        notice: 'اہم نوٹس: براہ کرم غور سے پڑھیں',
+        intro: 'اس پراپرٹی پورٹل ("پلیٹ فارم") پر پراپرٹی لسٹنگ جمع کرواتے وقت، آپ مندرجہ ذیل شرائط و ضوابط کو تسلیم کرتے ہیں اور ان پر متفق ہوتے ہیں:',
+        section1: {
+          title: '1. پلیٹ فارم کی نوعیت:',
+          text: 'یہ پراپرٹی پورٹل ایک درجہ بند اشتہاری پلیٹ فارم ہے جو صرف پراپرٹی لسٹنگ بنانے اور دکھانے کے مقصد کے لیے بنایا گیا ہے۔ پلیٹ فارم خاص طور پر ایک ثالث سروس فراہم کنندہ کے طور پر کام کرتا ہے جو پراپرٹی مالکان/اشتہار دینے والوں اور ممکنہ خریداروں/کرایہ داروں کے درمیان تعلق کو آسان بناتا ہے۔'
+        },
+        section2: {
+          title: '2. لین دین کے لیے کوئی ذمہ داری نہیں:',
+          text: 'پراپرٹی پورٹل مندرجہ ذیل سے متعلق کسی بھی ذمہ داری کے لیے ذمہ دار نہیں ہے اور اس سے صراحتاً انکار کرتا ہے:',
+          items: [
+            'اس پلیٹ فارم کو استعمال کرنے والے فریقین کے درمیان کیے گئے کسی بھی لین دین، معاہدے یا ڈیلز',
+            'صارفین کی طرف سے پوسٹ کی گئی پراپرٹی لسٹنگ کی درستگی، مکملیت، یا سچائی',
+            'پلیٹ فارم پر درج کسی بھی پراپرٹی کی حالت، معیار، قانونی حیثیت، یا دستیابی',
+            'پراپرٹی مالکان اور ممکنہ خریداروں/کرایہ داروں کے درمیان پیدا ہونے والے کسی بھی تنازعات، دعوؤں، یا اختلافات',
+            'فریقین کے درمیان مالی لین دین، ادائیگیاں، جمع کرائیں، یا کوئی بھی مالی تبادلے',
+            'پراپرٹی میں خرابیاں، غلط بیانی، یا ملکیت دیکھنے یا خریداری/کرایہ لینے کے بعد دریافت ہونے والے مسائل',
+            'قانونی تعمیل، پراپرٹی حقوق، ملکیت کی تصدیق، یا دستاویزات سے متعلق معاملات'
+          ]
+        },
+        section3: {
+          title: '3. صارفین کی ذمہ داریاں:',
+          text: 'صارفین مکمل طور پر ذمہ دار ہیں:',
+          items: [
+            'کسی بھی فیصلے سے پہلے پراپرٹی لسٹنگ میں فراہم کردہ تمام معلومات کی تصدیق کرنے کے لیے',
+            'پراپرٹیز کی آزادانہ طور پر مکمل جانچ پڑتال، معائنہ، اور قانونی تصدیق کرنے کے لیے',
+            'اپنی ذاتی خطرے اور صوابدید پر معاہدے اور لین دین میں داخل ہونے کے لیے',
+            'کسی بھی لین دین مکمل کرنے سے پہلے مناسب قانونی، مالی، اور پیشہ ورانہ مشورہ لینے کے لیے',
+            'تمام قابل اطلاق قوانین، ضوابط، اور مقامی تقاضوں کی تعمیل کو یقینی بنانے کے لیے'
+          ]
+        },
+        section4: {
+          title: '4. ذمہ داری کی حد:',
+          text: 'قانون کی زیادہ سے زیادہ حد تک، پراپرٹی پورٹل، اس کے مالکان، آپریٹرز، ملازمین، اور الحاق شدہ ادارے اس پلیٹ فارم یا اس میں موجود کسی بھی پراپرٹی لسٹنگ کے استعمال سے متعلق یا اس سے پیدا ہونے والے کسی بھی براہ راست، بالواسطہ، ضمنی، خصوصی، نتیجہ خیز، یا سزائی نقصانات کے لیے ذمہ دار نہیں ہوں گے۔'
+        },
+        section5: {
+          title: '5. کوئی ضمانت نہیں:',
+          text: 'پلیٹ فارم "جیسا ہے" فراہم کیا جاتا ہے بغیر کسی قسم کی ضمانت کے، خواہ واضح یا ضمنی، بشمول لیکن فروخت کے لیے موزونیت، کسی خاص مقصد کے لیے موزونیت، یا عدم خلاف ورزی کی ضمانتوں تک محدود نہیں۔'
+        },
+        section6: {
+          title: '6. نقصان کی تلافی:',
+          text: 'اس پلیٹ فارم کو استعمال کرکے، آپ پراپرٹی پورٹل کو پلیٹ فارم کے استعمال، آپ کی پراپرٹی لسٹنگ، یا اس پلیٹ فارم کے استعمال کے نتیجے میں کیے گئے کسی بھی لین دین سے پیدا ہونے والے کسی بھی دعوؤں، نقصانات، ہلاکتوں، ذمہ داریوں، اخراجات، اور اخراجات (قانونی فیسوں سمیت) سے بے ضرر کرنے اور بچانے پر متفق ہوتے ہیں۔'
+        },
+        section7: {
+          title: '7. قبولیت:',
+          text: 'معاہدے کی قبولیت باکس کو چیک کرکے اور پراپرٹی لسٹنگ جمع کرواکر، آپ تصدیق کرتے ہیں کہ آپ نے اس صارف معاہدے میں درج تمام شرائط و ضوابط کو پڑھا، سمجھا، اور ان سے پابند ہونے پر متفق ہیں۔'
+        },
+        warning: 'اگر آپ ان شرائط سے متفق نہیں ہیں، تو اس پلیٹ فارم پر پراپرٹی لسٹنگ جمع نہ کروائیں۔',
+        checkboxLabel: 'میں نے اوپر بیان کردہ صارف معاہدہ اور خدمات کی شرائط کو پڑھا، سمجھا، اور ان پر متفق ہوں۔ میں تسلیم کرتا/کرتی ہوں کہ پراپرٹی پورٹل کسی بھی لین دین یا پراپرٹی سے متعلق معاملات کے لیے ذمہ دار نہیں ہے۔',
+        errorMessage: 'آپ کو پراپرٹی لسٹنگ جمع کروانے کے لیے صارف معاہدہ قبول کرنا ہوگا۔'
+      };
+    } else {
+      return {
+        title: 'User Agreement & Terms of Service',
+        notice: 'IMPORTANT NOTICE: PLEASE READ CAREFULLY',
+        intro: 'By submitting a property listing on this Property Portal ("the Platform"), you acknowledge and agree to the following terms and conditions:',
+        section1: {
+          title: '1. Platform Nature:',
+          text: 'This Property Portal is a classified advertising platform designed solely for the purpose of creating and displaying property listings. The Platform acts exclusively as an intermediary service provider facilitating the connection between property owners/advertisers and potential buyers/renters.'
+        },
+        section2: {
+          title: '2. No Responsibility for Transactions:',
+          text: 'The Property Portal is NOT responsible for, and expressly disclaims any and all liability related to:',
+          items: [
+            'Any transactions, agreements, or deals entered into between parties using this Platform',
+            'The accuracy, completeness, or truthfulness of property listings posted by users',
+            'The condition, quality, legality, or availability of any property listed on the Platform',
+            'Any disputes, claims, or disagreements arising between property owners and potential buyers/renters',
+            'Financial transactions, payments, deposits, or any monetary exchanges between parties',
+            'Property defects, misrepresentations, or any issues discovered after viewing or purchasing/renting a property',
+            'Legal compliance, property rights, ownership verification, or documentation matters'
+          ]
+        },
+        section3: {
+          title: '3. User Responsibilities:',
+          text: 'Users are solely responsible for:',
+          items: [
+            'Verifying all information provided in property listings before making any decisions',
+            'Conducting due diligence, inspections, and legal verification of properties independently',
+            'Entering into agreements and transactions at their own risk and discretion',
+            'Seeking appropriate legal, financial, and professional advice before completing any transaction',
+            'Ensuring compliance with all applicable laws, regulations, and local requirements'
+          ]
+        },
+        section4: {
+          title: '4. Limitation of Liability:',
+          text: 'To the maximum extent permitted by law, the Property Portal, its owners, operators, employees, and affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from or related to the use of this Platform or any property listings contained herein.'
+        },
+        section5: {
+          title: '5. No Warranty:',
+          text: 'The Platform is provided "as is" without warranties of any kind, either express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement.'
+        },
+        section6: {
+          title: '6. Indemnification:',
+          text: 'By using this Platform, you agree to indemnify and hold harmless the Property Portal from any claims, damages, losses, liabilities, costs, and expenses (including legal fees) arising from your use of the Platform, your property listing, or any transactions entered into as a result of using this Platform.'
+        },
+        section7: {
+          title: '7. Acceptance:',
+          text: 'By checking the agreement acceptance box and submitting a property listing, you confirm that you have read, understood, and agree to be bound by all terms and conditions set forth in this User Agreement.'
+        },
+        warning: 'IF YOU DO NOT AGREE TO THESE TERMS, DO NOT SUBMIT A PROPERTY LISTING ON THIS PLATFORM.',
+        checkboxLabel: 'I have read, understood, and agree to the User Agreement and Terms of Service stated above. I acknowledge that the Property Portal is not responsible for any transactions or property-related matters.',
+        errorMessage: 'You must accept the User Agreement to submit a property listing.'
+      };
+    }
   }
 }
 

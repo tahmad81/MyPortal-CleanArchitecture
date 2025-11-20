@@ -27,6 +27,7 @@ namespace Portal.Application.Interfaces
         Task<bool> DeletePhotoAsync(Guid photoId);
         Task<PropertyPhoto?> GetPhotoByIdAsync(Guid photoId);
         Task<IEnumerable<PropertyPhoto>> GetPhotosByPropertyIdAsync(Guid propertyId);
+        Task IncrementViewCountAsync(Guid propertyId);
     }
 }
 

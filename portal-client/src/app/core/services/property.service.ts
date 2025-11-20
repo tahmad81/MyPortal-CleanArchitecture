@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { apiConfig } from '../config/api.config';
 import { environment } from '../config/environment';
-import { CreatePropertyRequest, UpdatePropertyRequest, Property, PropertyListResponse, PropertyResponse } from '../models/property.models';
+import { CreatePropertyRequest, UpdatePropertyRequest, Property, PropertyListResponse, PropertyResponse, RemovePropertyRequest } from '../models/property.models';
 
 @Injectable({ providedIn: 'root' })
 export class PropertyService {
@@ -59,6 +59,14 @@ export class PropertyService {
 
   updateProperty(id: string, request: UpdatePropertyRequest): Observable<PropertyResponse> {
     return this.http.put<PropertyResponse>(`${this.baseUrl}${this.endpoints.properties.detail}/${id}`, request);
+  }
+
+  removeProperty(id: string, request: RemovePropertyRequest): Observable<PropertyResponse> {
+    return this.http.post<PropertyResponse>(`${this.baseUrl}${this.endpoints.properties.detail}/${id}/remove`, request);
+  }
+
+  reactivateProperty(id: string): Observable<PropertyResponse> {
+    return this.http.post<PropertyResponse>(`${this.baseUrl}${this.endpoints.properties.detail}/${id}/reactivate`, {});
   }
 }
 

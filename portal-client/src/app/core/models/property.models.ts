@@ -24,6 +24,12 @@ export interface Property {
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;
+  expiryDate: string;
+  isRemoved: boolean;
+  removedDate?: string;
+  removeReason?: string;
+  originalExpiryDate?: string;
+  viewCount: number;
   photos: PropertyPhoto[];
 }
 
@@ -65,7 +71,12 @@ export interface CreatePropertyRequest {
   parking?: string;
   furnishingStatus?: string;
   contactNumber?: string;
+  agreementAccepted: boolean;
   photos?: PropertyPhotoRequest[];
+}
+
+export interface RemovePropertyRequest {
+  removeReason: string;
 }
 
 export interface PropertyListResponse {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portal.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Portal.Infrastructure.Persistence;
 namespace Portal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251119154136_AddExpiryDateAndRemoveFieldsToProperty")]
+    partial class AddExpiryDateAndRemoveFieldsToProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,9 +116,6 @@ namespace Portal.Infrastructure.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ViewCount")
-                        .HasColumnType("int");
 
                     b.Property<int?>("YearBuilt")
                         .HasColumnType("int");

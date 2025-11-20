@@ -34,6 +34,12 @@ namespace Portal.Core.Entities
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public bool IsRemoved { get; set; } = false;
+        public DateTime? RemovedDate { get; set; }
+        public string? RemoveReason { get; set; }
+        public DateTime? OriginalExpiryDate { get; set; } // Store original expiry when removed
+        public int ViewCount { get; set; } = 0; // Number of times the property was viewed
         
         // Navigation property
         public ICollection<PropertyPhoto> Photos { get; set; } = new List<PropertyPhoto>();
@@ -52,7 +58,9 @@ namespace Portal.Core.Entities
         Villa = 3,
         Land = 4,
         Commercial = 5,
-        Other = 6
+        Plot=6,
+        FarmHouse=7,
+        Other = 8
     }
 }
 

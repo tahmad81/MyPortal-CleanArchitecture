@@ -1,18 +1,20 @@
 <div class="min-h-[calc(100vh-8rem)]">
   <!-- Header -->
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-900 mb-1">
-      <span *ngIf="!isSearchMode">Latest Properties</span>
-      <span *ngIf="isSearchMode">Search Results</span>
-    </h1>
-    <p class="text-sm text-gray-500">
-      <span *ngIf="!isSearchMode">Discover the newest property listings</span>
-      <span *ngIf="isSearchMode">Find your perfect property</span>
-    </p>
+  <div class="mb-6 flex items-start justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-1">
+        <span *ngIf="!isSearchMode">Latest Properties</span>
+        <span *ngIf="isSearchMode">Search Results</span>
+      </h1>
+      <p class="text-sm text-gray-500">
+        <span *ngIf="!isSearchMode">Discover the newest property listings</span>
+        <span *ngIf="isSearchMode">Find your perfect property</span>
+      </p>
+    </div>
   </div>
 
   <!-- Search Bar -->
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 mb-6">
+  <div class="bg-white/60 backdrop-blur-md rounded-lg border border-gray-200/50 shadow-sm p-4 mb-6">
     <form [formGroup]="searchForm" (ngSubmit)="performSearch()" class="space-y-4">
       <!-- Main Search -->
       <div class="flex gap-2">

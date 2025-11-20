@@ -35,8 +35,8 @@ export class LoginComponent implements OnInit {
     this.loginFacade.response$.subscribe(response => {
       if (response?.success) {
             this.showToast('success', response.message ?? 'Login successful.');
-            // Redirect to returnUrl or default to /users page after a short delay
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/users';
+            // Redirect to returnUrl or default to dashboard after showing success message
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
             setTimeout(() => {
               this.router.navigate([returnUrl]);
             }, 1500);

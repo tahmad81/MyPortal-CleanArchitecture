@@ -34,7 +34,8 @@ namespace Portal.Application.Mapping
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.Photos, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.ExpiryDate, opt => opt.Ignore());
 
             CreateMap<UpdatePropertyRequest, Property>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

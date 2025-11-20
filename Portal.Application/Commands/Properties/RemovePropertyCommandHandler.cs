@@ -1,0 +1,70 @@
+using AutoMapper;
+using MediatR;
+using Microsoft.Extensions.Configuration;
+using Portal.Application.Dtos;
+using Portal.Application.Interfaces;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Portal.Application.Commands.Properties
+{
+    public class RemovePropertyCommandHandler : IRequestHandler<RemovePropertyCommand, BaseResponse<PropertyDto>>
+    {
+        private readonly IPropertyRepository _propertyRepository;
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+
+        public RemovePropertyCommandHandler(
+            IPropertyRepository propertyRepository,
+            IMapper mapper,
+            IConfiguration configuration)
+        {
+            _propertyRepository = propertyRepository;
+            _mapper = mapper;
+            _configuration = configuration;
+        }
+
+        public async Task<BaseResponse<PropertyDto>> Handle(RemovePropertyCommand request, CancellationToken cancellationToken)
+        {
+            var property = await _propertyRepository.GetByIdAsync(request.PropertyId);
+
+            if (property == null)
+            {
+                return BaseResponse<PropertyDto>.Failure("Property not found.");
+            }
+
+            // Verify ownership
+            if (property.UserId != request.UserId)
+            {
+                return BaseResponse<PropertyDto>.Failure("You do not have permission to remove this property.");
+            }
+
+            // Check if already removed
+            if (property.IsRemoved)
+            {
+                return BaseResponse<PropertyDto>.Failure("Property is already removed.");
+            }
+
+            // Store original expiry date and set removal
+            property.OriginalExpiryDate = property.ExpiryDate;
+            property.IsRemoved = true;
+            property.RemovedDate = DateTime.UtcNow;
+            property.RemoveReason = request.RemoveReason;
+            property.UpdatedAt = DateTime.UtcNow;
+
+            var updatedProperty = await _propertyRepository.UpdateAsync(property);
+            var propertyWithRelations = await _propertyRepository.GetByIdAsync(updatedProperty.Id);
+
+            if (propertyWithRelations == null)
+            {
+                return BaseResponse<PropertyDto>.Failure("Property was updated but could not be retrieved.");
+            }
+
+            var propertyDto = _mapper.Map<PropertyDto>(propertyWithRelations);
+
+            return BaseResponse<PropertyDto>.SuccessResult(propertyDto, "Property removed successfully.");
+        }
+    }
+}
+

@@ -38,10 +38,11 @@ namespace Portal.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Property>> GetAllAsync()
         {
+            var now = DateTime.UtcNow;
             return await _context.Properties
                 .Include(p => p.User)
                 .Include(p => p.Photos.Where(ph => ph.IsPrimary))
-                .Where(p => p.IsActive)
+                .Where(p => p.IsActive && !p.IsRemoved && p.ExpiryDate > now)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
         }
@@ -57,10 +58,11 @@ namespace Portal.Infrastructure.Persistence.Repositories
             int? minBedrooms = null,
             int? minBathrooms = null)
         {
+            var now = DateTime.UtcNow;
             var query = _context.Properties
                 .Include(p => p.User)
                 .Include(p => p.Photos.Where(ph => ph.IsPrimary))
-                .Where(p => p.IsActive);
+                .Where(p => p.IsActive && !p.IsRemoved && p.ExpiryDate > now);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -176,6 +178,16 @@ namespace Portal.Infrastructure.Persistence.Repositories
                 .Where(p => p.PropertyId == propertyId)
                 .OrderBy(p => p.DisplayOrder)
                 .ToListAsync();
+        }
+
+        public async Task IncrementViewCountAsync(Guid propertyId)
+        {
+            var property = await _context.Properties.FindAsync(propertyId);
+            if (property != null)
+            {
+                property.ViewCount++;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

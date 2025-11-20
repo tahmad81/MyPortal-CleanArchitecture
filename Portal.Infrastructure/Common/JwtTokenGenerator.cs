@@ -26,11 +26,17 @@ namespace Portal.Infrastructure.Common
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            };
+
+            // Add IsSuperAdmin claim
+            //if (user.IsSuperAdmin)
+            //{
+            //    claims.Add(new Claim("IsSuperAdmin", "true"));
+            //}
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

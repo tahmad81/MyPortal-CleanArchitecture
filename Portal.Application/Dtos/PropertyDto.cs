@@ -32,6 +32,12 @@ namespace Portal.Application.Dtos
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public bool IsRemoved { get; set; }
+        public DateTime? RemovedDate { get; set; }
+        public string? RemoveReason { get; set; }
+        public DateTime? OriginalExpiryDate { get; set; }
+        public int ViewCount { get; set; } = 0;
         public List<PropertyPhotoDto> Photos { get; set; } = new();
     }
 
@@ -80,6 +86,7 @@ namespace Portal.Application.Dtos
         public string? Parking { get; set; }
         public string? FurnishingStatus { get; set; }
         public string? ContactNumber { get; set; }
+        public bool AgreementAccepted { get; set; }
         public List<PropertyPhotoRequest>? Photos { get; set; }
     }
 

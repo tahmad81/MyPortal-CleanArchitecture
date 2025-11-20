@@ -30,7 +30,14 @@ namespace Portal.Application.Queries.Properties
                 return BaseResponse<PropertyDto>.Failure("Property not found.");
             }
 
+            // Increment view count when property is viewed
+            await _propertyRepository.IncrementViewCountAsync(request.Id);
+            
+            // Reload property to get updated view count
+            property = await _propertyRepository.GetByIdAsync(request.Id);
+
             var propertyDto = _mapper.Map<PropertyDto>(property);
+            
             return BaseResponse<PropertyDto>.SuccessResult(propertyDto, "Property retrieved successfully.");
         }
     }

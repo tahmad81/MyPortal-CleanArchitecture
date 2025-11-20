@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portal.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Portal.Infrastructure.Persistence;
 namespace Portal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251119111248_AddIsSuperAdminToUser")]
+    partial class AddIsSuperAdminToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,20 +71,11 @@ namespace Portal.Infrastructure.Migrations
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FurnishingStatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("IsRemoved")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("OriginalExpiryDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Parking")
                         .HasColumnType("nvarchar(max)");
@@ -89,12 +83,6 @@ namespace Portal.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RemoveReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RemovedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -113,9 +101,6 @@ namespace Portal.Infrastructure.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ViewCount")
-                        .HasColumnType("int");
 
                     b.Property<int?>("YearBuilt")
                         .HasColumnType("int");
@@ -189,6 +174,9 @@ namespace Portal.Infrastructure.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");

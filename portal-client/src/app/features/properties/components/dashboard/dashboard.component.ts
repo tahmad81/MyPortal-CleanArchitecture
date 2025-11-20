@@ -16,7 +16,7 @@ import { LocationService } from '../../../../core/services/location.service';
 export class DashboardComponent implements OnInit {
   private readonly dashboardFacade = inject(DashboardFacade);
   private readonly locationService = inject(LocationService);
-  private readonly router = inject(Router);
+  readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
   readonly properties$ = this.dashboardFacade.properties$;
