@@ -1,0 +1,152 @@
+<div class="workflow-container">
+  <!-- Side Menu -->
+  <aside class="workflow-sidebar">
+    <div class="sidebar-header">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Node Types</h3>
+      <p class="text-sm text-gray-600 mb-4">Click to add nodes</p>
+    </div>
+    
+    <div class="node-types-list">
+      <div 
+        *ngFor="let nodeType of nodeTypes" 
+        class="node-type-item"
+        [style.border-color]="nodeType.color"
+        (click)="addNode(nodeType.type)">
+        <span class="node-icon">{{ nodeType.icon }}</span>
+        <span class="node-label">{{ nodeType.label }}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-actions mt-6">
+      <div class="debug-info mb-2 text-xs text-gray-500">
+        Nodes: {{ (nodes$ | async)?.length || 0 }} | Connections: {{ (edges$ | async)?.length || 0 }}
+      </div>
+      <button 
+        class="btn-clear"
+        (click)="workflowFacade.reset()">
+        Clear All
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Canvas Area -->
+  <div class="workflow-canvas-container">
+    <f-flow 
+      fDraggable 
+      (fNodePositionChanged)="onNodePositionChanged($event)"
+      (fConnectionCreated)="onConnectionCreated($event)"
+      (fConnectionRemoved)="onConnectionRemoved($event)">
+      <f-canvas fZoom>
+        <!-- Debug: Show node count -->
+        <div *ngIf="flow.nodes.length === 0" class="empty-state">
+          <p>No nodes yet. Click a node type in the sidebar to add one.</p>
+          <p class="text-xs mt-2">Debug: flow.nodes.length = {{ flow.nodes.length }}</p>
+        </div>
+        <!-- Render Connections (Foblex Flow) -->
+        <ng-container *ngFor="let connection of flow.connections; trackBy: trackByFn">
+          <f-connection 
+            [fBehavior]="cBehavior"
+            [fType]="cType"
+            [fOutputId]="connection.from"
+            [fInputId]="connection.to"
+            [fConnectionId]="connection.key"
+            class="workflow-connection">
+          </f-connection>
+        </ng-container>
+        
+        <!-- Manual SVG Connections (Fallback) -->
+        <svg class="manual-connections-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;">
+          <defs>
+            <marker
+              id="arrowhead-blue"
+              markerWidth="10"
+              markerHeight="10"
+              refX="9"
+              refY="3"
+              orient="auto"
+              markerUnits="strokeWidth">
+              <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+            </marker>
+          </defs>
+          <g>
+            <path
+              *ngFor="let connection of flow.connections; trackBy: trackByFn"
+              [attr.d]="getConnectionPath(connection)"
+              class="manual-connection-path"
+              stroke="#3b82f6"
+              stroke-width="3"
+              fill="none"
+              marker-end="url(#arrowhead-blue)" />
+          </g>
+        </svg>
+        <!-- Debug connections -->
+        <div *ngIf="flow.connections.length > 0" class="debug-overlay">
+          <p class="text-xs font-bold">Connections: {{ flow.connections.length }}</p>
+          <div *ngFor="let conn of flow.connections" class="text-xs mt-1">
+            {{ conn.from }} → {{ conn.to }}
+          </div>
+        </div>
+
+        <!-- Render Nodes -->
+        <div 
+          *ngFor="let node of flow.nodes; trackBy: trackByFn"
+          fNode 
+          [fNodePosition]="node.position"
+          [fNodeId]="node.key"
+          [style.border-color]="getNodeColor(node)"
+          class="workflow-node">
+          
+          <!-- Input Handle -->
+          <div 
+            *ngIf="node.input"
+            fNodeInput
+            [fInputId]="node.input"
+            [fInputConnectableSide]="eConnectableSide.LEFT"
+            [fInputDisabled]="false"
+            class="node-handle node-handle-input"
+            [class.connecting]="isConnecting && connectingFromType === 'output'"
+            (mousedown)="onHandleMouseDown($event, node.input, 'input', node.key)"
+            (mouseup)="onHandleMouseUp($event, node.input, 'input', node.key)"
+            title="Connect to here">
+          </div>
+
+          <!-- Node Content (Draggable Area) -->
+          <div fDragHandle (dblclick)="onNodeDoubleClick(node)" class="node-content">
+            <!-- Node Header -->
+            <div class="node-header" [style.background-color]="getNodeColor(node)">
+              <span class="node-icon-small">{{ getNodeIcon(node) }}</span>
+              <span class="node-title">{{ node.name }}</span>
+            </div>
+
+            <!-- Node Body -->
+            <div class="node-body">
+              <div *ngIf="node.data?.text" class="node-text">{{ node.data.text }}</div>
+              <div *ngIf="!node.data?.text && node.type !== 'start' && node.type !== 'end'" class="node-text-placeholder">
+                Double-click to edit
+              </div>
+              <button 
+                class="node-action-btn"
+                (click)="onNodeButtonClick(node)">
+                Action
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Handles -->
+          <div 
+            *ngFor="let output of node.outputs; trackBy: trackByFn"
+            fNodeOutput 
+            [fOutputId]="output" 
+            [fOutputConnectableSide]="eConnectableSide.RIGHT"
+            [fOutputDisabled]="false"
+            class="node-handle node-handle-output"
+            [class.connecting]="isConnecting && connectingFromType === 'output' && connectingFrom === output"
+            (mousedown)="onHandleMouseDown($event, output, 'output', node.key)"
+            (mouseup)="onHandleMouseUp($event, output, 'output', node.key)"
+            title="Connect from here">
+          </div>
+        </div>
+      </f-canvas>
+    </f-flow>
+  </div>
+</div>

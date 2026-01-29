@@ -26,6 +26,7 @@ export class App implements OnInit {
   private readonly allMenuItems: MenuItem[] = [
     { title: 'Dashboard', icon: '🏠', link: '/' },
     { title: 'My Ads', icon: '📋', link: '/properties/my-ads' },
+    { title: 'Workflow', icon: '🔄', link: '/workflow' },
     { title: 'Login', icon: '🔐', link: '/auth/login' },
     { title: 'Register', icon: '👤', link: '/auth/register' },
     { title: 'Logout', icon: '🚪', link: '/logout' },

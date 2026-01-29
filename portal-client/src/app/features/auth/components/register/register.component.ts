@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 
 import { RegisterFacade } from './store/register.facade';
-import { PhoneAuthService } from '../../../../core/services/phone-auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { RecaptchaService } from '../../../../core/services/recaptcha.service';
 
 @Component({
@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   private readonly registerFacade = inject(RegisterFacade);
-  private readonly phoneAuthService = inject(PhoneAuthService);
+  private readonly authService = inject(AuthService);
   private readonly recaptchaService = inject(RecaptchaService);
   
   toastMessage: { type: 'success' | 'error'; message: string } | null = null;
@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
   sendingOTP = false;
   verifyingOTP = false;
   recaptchaToken = '';
-  firebaseIdToken = '';
+  emailOtp = '';
   recaptchaWidgetId: number | null = null;
 
   readonly registerForm = this.fb.group(
@@ -51,8 +51,8 @@ export class RegisterComponent implements OnInit {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      phoneNumber: [''], // Optional now
+      password: ['', [Validators.required, Validators.minLength(3)]],
       confirmPassword: ['', [Validators.required]],
       otpCode: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
       acceptTerms: [false, Validators.requiredTrue]
@@ -61,10 +61,10 @@ export class RegisterComponent implements OnInit {
   );
 
   constructor() {
-    // Use afterNextRender to ensure DOM is ready (must be in injection context)
-    afterNextRender(() => {
-      this.initializeRecaptcha();
-    });
+    // reCAPTCHA is disabled - no initialization needed
+    // afterNextRender(() => {
+    //   this.initializeRecaptcha();
+    // });
   }
 
   ngOnInit(): void {
@@ -92,17 +92,8 @@ export class RegisterComponent implements OnInit {
   }
 
   private async initializeRecaptcha(): Promise<void> {
-    // Initialize reCAPTCHA v2 (for form submission)
-    try {
-      const widgetId = await this.recaptchaService.render('recaptcha-container');
-      this.recaptchaWidgetId = widgetId;
-    } catch (error) {
-      console.error('Failed to initialize reCAPTCHA:', error);
-      this.showToast('error', 'Failed to initialize reCAPTCHA. Please refresh the page.');
-    }
-
-    // Note: Firebase Phone Auth reCAPTCHA is initialized lazily when sending OTP
-    // to avoid configuration-not-found errors during component initialization
+    // reCAPTCHA is disabled - no initialization needed
+    // This method is kept for compatibility but does nothing
   }
 
   resetForm(): void {
@@ -120,11 +111,10 @@ export class RegisterComponent implements OnInit {
     this.otpSent = false;
     this.otpVerified = false;
     this.recaptchaToken = '';
-    this.firebaseIdToken = '';
+    this.emailOtp = '';
     if (this.recaptchaWidgetId !== null) {
       this.recaptchaService.reset();
     }
-    this.phoneAuthService.reset();
   }
   
   showToast(type: 'success' | 'error', message: string): void {
@@ -135,75 +125,42 @@ export class RegisterComponent implements OnInit {
   }
 
   async sendOTP(): Promise<void> {
-    const phoneNumber = this.registerForm.get('phoneNumber')?.value;
+    const email = this.registerForm.get('email')?.value;
     
-    if (!phoneNumber || this.registerForm.get('phoneNumber')?.invalid) {
-      this.registerForm.get('phoneNumber')?.markAsTouched();
-      this.showToast('error', 'Please enter a valid phone number.');
+    if (!email || this.registerForm.get('email')?.invalid) {
+      this.registerForm.get('email')?.markAsTouched();
+      this.showToast('error', 'Please enter a valid email address.');
       return;
-    }
-
-    // Check if reCAPTCHA widget is initialized
-    if (this.recaptchaWidgetId === null) {
-      this.showToast('error', 'reCAPTCHA is not initialized. Please refresh the page.');
-      return;
-    }
-
-    // Get reCAPTCHA token - try from service first, then directly with widgetId
-    let recaptchaResponse = this.recaptchaService.getResponse();
-    
-    // If service doesn't have response, try directly with stored widgetId
-    if ((!recaptchaResponse || recaptchaResponse.length === 0) && this.recaptchaWidgetId !== null) {
-      if (typeof window !== 'undefined' && (window as any).grecaptcha && (window as any).grecaptcha.getResponse) {
-        recaptchaResponse = (window as any).grecaptcha.getResponse(this.recaptchaWidgetId);
-      }
-    }
-
-    if (!recaptchaResponse || recaptchaResponse.length === 0) {
-      this.showToast('error', 'Please complete the reCAPTCHA verification by checking the box below.');
-      return;
-    }
-    this.recaptchaToken = recaptchaResponse;
-
-    // Initialize Firebase Phone Auth reCAPTCHA lazily if not already initialized
-    try {
-      await this.phoneAuthService.initializeRecaptcha('recaptcha-phone-container');
-    } catch (error: any) {
-      // Check if it's a configuration error
-      const errorMessage = error?.message || '';
-      if (errorMessage.includes('CONFIGURATION_NOT_FOUND') || errorMessage.includes('configuration-not-found') || 
-          errorMessage.includes('Phone Authentication is not enabled')) {
-        this.showToast('error', 'Phone Authentication is not configured. Please enable it in Firebase Console under Authentication > Sign-in method > Phone.');
-        this.sendingOTP = false;
-        return;
-      }
-      // Check if it's an "already rendered" error - this is usually fine, we can continue
-      if (errorMessage.includes('already been rendered') || errorMessage.includes('recaptcha-already-rendered')) {
-        // This is okay, the reCAPTCHA is already initialized, we can continue
-        console.log('Firebase reCAPTCHA already initialized, continuing...');
-      } else {
-        // If other initialization error, try to continue anyway (might already be initialized)
-        console.warn('Firebase reCAPTCHA initialization warning:', error);
-      }
     }
 
     this.sendingOTP = true;
     try {
       await new Promise<void>((resolve, reject) => {
-        this.phoneAuthService.sendOTP(phoneNumber).subscribe({
-          next: () => resolve(),
-          error: (err) => reject(err)
+        this.authService.sendEmailOtp(email).subscribe({
+          next: (response) => {
+            if (response.success) {
+              resolve();
+            } else {
+              reject(new Error(response.message || 'Failed to send OTP. Please try again.'));
+            }
+          },
+          error: (err) => {
+            let errorMessage = 'Failed to send OTP. Please try again.';
+            if (err?.error?.message) {
+              errorMessage = err.error.message;
+            } else if (err?.message) {
+              errorMessage = err.message;
+            } else if (typeof err === 'string') {
+              errorMessage = err;
+            }
+            reject(new Error(errorMessage));
+          }
         });
       });
       this.otpSent = true;
-      this.showToast('success', 'OTP sent to your phone number.');
+      this.showToast('success', 'OTP sent to your email address.');
     } catch (error: any) {
-      let errorMessage = error?.message || 'Failed to send OTP. Please try again.';
-      // Check for configuration errors
-      if (errorMessage.includes('CONFIGURATION_NOT_FOUND') || errorMessage.includes('configuration-not-found') || 
-          errorMessage.includes('Phone Authentication is not enabled')) {
-        errorMessage = 'Phone Authentication is not configured. Please enable it in Firebase Console under Authentication > Sign-in method > Phone.';
-      }
+      const errorMessage = error?.message || error?.error?.message || 'Failed to send OTP. Please try again.';
       this.showToast('error', errorMessage);
     } finally {
       this.sendingOTP = false;
@@ -212,6 +169,7 @@ export class RegisterComponent implements OnInit {
 
   async verifyOTP(): Promise<void> {
     const otpCode = this.registerForm.get('otpCode')?.value;
+    const email = this.registerForm.get('email')?.value;
     
     if (!otpCode || this.registerForm.get('otpCode')?.invalid) {
       this.registerForm.get('otpCode')?.markAsTouched();
@@ -219,17 +177,61 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    if (!email) {
+      this.showToast('error', 'Email is required.');
+      return;
+    }
+
     this.verifyingOTP = true;
     try {
-      const idToken = await this.phoneAuthService.verifyOTPAsync(otpCode);
-      this.firebaseIdToken = idToken;
+      await new Promise<void>((resolve, reject) => {
+        this.authService.verifyEmailOtp(email, otpCode).subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.emailOtp = otpCode;
+              resolve();
+            } else {
+              reject(new Error(response.message || 'Invalid OTP code. Please try again.'));
+            }
+          },
+          error: (err) => {
+            let errorMessage = 'Invalid OTP code. Please try again.';
+            if (err?.error?.message) {
+              errorMessage = err.error.message;
+            } else if (err?.message) {
+              errorMessage = err.message;
+            } else if (typeof err === 'string') {
+              errorMessage = err;
+            }
+            reject(new Error(errorMessage));
+          }
+        });
+      });
       this.otpVerified = true;
-      this.showToast('success', 'Phone number verified successfully.');
+      this.showToast('success', 'Email verified successfully.');
     } catch (error: any) {
-      this.showToast('error', error.message || 'Invalid OTP code. Please try again.');
+      const errorMessage = error?.message || error?.error?.message || 'Invalid OTP code. Please try again.';
+      this.showToast('error', errorMessage);
     } finally {
       this.verifyingOTP = false;
     }
+  }
+
+  onSubmitClick(): void {
+    // Check form validity and OTP verification before submitting
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      this.showToast('error', 'Please fill all required fields correctly.');
+      return;
+    }
+
+    if (!this.otpVerified) {
+      this.showToast('error', 'Please verify your email with OTP first.');
+      return;
+    }
+
+    // Proceed with submission
+    this.submit();
   }
 
   submit(): void {
@@ -239,31 +241,15 @@ export class RegisterComponent implements OnInit {
     }
 
     if (!this.otpVerified) {
-      this.showToast('error', 'Please verify your phone number with OTP first.');
+      this.showToast('error', 'Please verify your email with OTP first.');
       return;
     }
 
-    // Check if reCAPTCHA is currently verified and get fresh token
-    // Try using the stored widgetId from component if service doesn't have it
-    let currentRecaptchaResponse = this.recaptchaService.getResponse();
-    
-    // If no response from service, try directly with stored widgetId
-    if ((!currentRecaptchaResponse || currentRecaptchaResponse.length === 0) && this.recaptchaWidgetId !== null) {
-      if (typeof window !== 'undefined' && (window as any).grecaptcha && (window as any).grecaptcha.getResponse) {
-        currentRecaptchaResponse = (window as any).grecaptcha.getResponse(this.recaptchaWidgetId);
-      }
-    }
+    // reCAPTCHA is disabled - use empty string as token
+    const recaptchaTokenToUse = '';
 
-    if (!currentRecaptchaResponse || currentRecaptchaResponse.length === 0) {
-      this.showToast('error', 'Please complete the reCAPTCHA verification.');
-      return;
-    }
-    
-    // Use current response (always use fresh token to avoid expiration issues)
-    const recaptchaTokenToUse = currentRecaptchaResponse;
-
-    if (!this.firebaseIdToken) {
-      this.showToast('error', 'Please verify your phone number with OTP first.');
+    if (!this.emailOtp) {
+      this.showToast('error', 'Please verify your email with OTP first.');
       return;
     }
 
@@ -274,10 +260,10 @@ export class RegisterComponent implements OnInit {
       firstName: firstName!,
       lastName: lastName!,
       email: email!,
-      phoneNumber: phoneNumber!,
+      phoneNumber: phoneNumber || undefined,
       password: password!,
       recaptchaToken: recaptchaTokenToUse,
-      firebaseIdToken: this.firebaseIdToken
+      emailOtp: this.emailOtp
     });
   }
 

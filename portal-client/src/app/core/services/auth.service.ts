@@ -21,5 +21,19 @@ export class AuthService {
   login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}${this.endpoints.auth.login}`, payload);
   }
+
+  sendEmailOtp(email: string): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>(
+      `${this.baseUrl}/auth/send-email-otp`,
+      { email }
+    );
+  }
+
+  verifyEmailOtp(email: string, otp: string): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>(
+      `${this.baseUrl}/auth/verify-email-otp`,
+      { email, otp }
+    );
+  }
 }
 

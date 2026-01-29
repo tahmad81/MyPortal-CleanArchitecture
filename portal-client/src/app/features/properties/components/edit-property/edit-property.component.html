@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+<div class="min-h-screen py-8">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
@@ -38,10 +38,10 @@
     </div>
 
     <!-- Form -->
-    <form *ngIf="!(isLoading$ | async)" [formGroup]="editForm" (ngSubmit)="submit()" class="glass-card p-8 space-y-8">
+    <form *ngIf="!(isLoading$ | async)" [formGroup]="editForm" (ngSubmit)="submit()" class="rounded-lg border-2 border-white shadow-sm p-8 space-y-8">
       <!-- Property Details -->
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Property Details</h2>
+        <h2 class="text-xl font-semibold text-gray-900 border-b-2 border-white pb-3">Property Details</h2>
 
         <!-- Title -->
         <div>
@@ -115,7 +115,7 @@
 
       <!-- Location Details -->
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Location</h2>
+        <h2 class="text-xl font-semibold text-gray-900 border-b-2 border-white pb-3">Location</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Address -->
@@ -228,7 +228,7 @@
 
       <!-- Property Features -->
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-3">Property Features</h2>
+        <h2 class="text-xl font-semibold text-gray-900 border-b-2 border-white pb-3">Property Features</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Bedrooms -->
@@ -394,7 +394,7 @@
       </div>
 
       <!-- Submit Button -->
-      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+      <div class="flex items-center justify-end space-x-4 pt-6 border-t-2 border-white">
         <button
           type="button"
           (click)="router.navigate(['/properties/my-ads'])"

@@ -34,6 +34,10 @@ namespace Portal.Infrastructure
             // Register Phone Verification service
             services.AddScoped<IPhoneVerificationService, PhoneVerificationService>();
 
+            // Register Email services
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailOtpService, EmailOtpService>();
+
             return services;
         }
 

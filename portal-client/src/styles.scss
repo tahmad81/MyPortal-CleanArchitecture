@@ -25,3 +25,24 @@
     @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/90;
   }
 }
+
+// Foblex Flow connection styling
+f-connection,
+.workflow-connection {
+  path,
+  line,
+  polyline {
+    stroke: #3b82f6 !important;
+    stroke-width: 3 !important;
+    fill: none !important;
+  }
+
+  &:hover {
+    path,
+    line,
+    polyline {
+      stroke: #2563eb !important;
+      stroke-width: 4 !important;
+    }
+  }
+}

@@ -17,54 +17,52 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, BaseResp
     private readonly IMapper _mapper;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IRecaptchaService _recaptchaService;
-    private readonly IPhoneVerificationService _phoneVerificationService;
+    private readonly IEmailOtpService _emailOtpService;
 
     public RegisterUserHandler(
         IUserRepository userRepo, 
         IMapper mapper,
         IPasswordHasher passwordHasher,
         IRecaptchaService recaptchaService,
-        IPhoneVerificationService phoneVerificationService)
+        IEmailOtpService emailOtpService)
     {
         _userRepo = userRepo;
         _mapper = mapper;
         _passwordHasher = passwordHasher;
         _recaptchaService = recaptchaService;
-        _phoneVerificationService = phoneVerificationService;
+        _emailOtpService = emailOtpService;
     }
 
     public async Task<BaseResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        // Verify reCAPTCHA token
-        if (string.IsNullOrWhiteSpace(request.User.RecaptchaToken))
+        // reCAPTCHA verification is disabled
+        // if (string.IsNullOrWhiteSpace(request.User.RecaptchaToken))
+        // {
+        //     return BaseResponse.Failure("reCAPTCHA verification is required.");
+        // }
+
+        // var isRecaptchaValid = await _recaptchaService.VerifyTokenAsync(request.User.RecaptchaToken);
+        // if (!isRecaptchaValid)
+        // {
+        //     return BaseResponse.Failure("reCAPTCHA verification failed. Please try again.");
+        // }
+
+        // Verify Email OTP
+        if (string.IsNullOrWhiteSpace(request.User.EmailOtp))
         {
-            return BaseResponse.Failure("reCAPTCHA verification is required.");
+            return BaseResponse.Failure("Email verification is required. Please verify your email with OTP.");
         }
 
-        var isRecaptchaValid = await _recaptchaService.VerifyTokenAsync(request.User.RecaptchaToken);
-        if (!isRecaptchaValid)
+        if (string.IsNullOrWhiteSpace(request.User.Email))
         {
-            return BaseResponse.Failure("reCAPTCHA verification failed. Please try again.");
+            return BaseResponse.Failure("Email is required.");
         }
 
-        // Verify Firebase phone token
-        if (string.IsNullOrWhiteSpace(request.User.FirebaseIdToken))
-        {
-            return BaseResponse.Failure("Phone verification is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(request.User.PhoneNumber))
-        {
-            return BaseResponse.Failure("Phone number is required.");
-        }
-
-        var isPhoneValid = await _phoneVerificationService.VerifyPhoneTokenAsync(
-            request.User.FirebaseIdToken, 
-            request.User.PhoneNumber);
+        var isEmailOtpValid = await _emailOtpService.VerifyOtpAsync(request.User.Email, request.User.EmailOtp);
         
-        if (!isPhoneValid)
+        if (!isEmailOtpValid)
         {
-            return BaseResponse.Failure("Phone verification failed. Please verify your phone number again.");
+            return BaseResponse.Failure("Email verification failed. Please verify your email with OTP again.");
         }
 
         // Check if user already exists
@@ -74,17 +72,20 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, BaseResp
             return BaseResponse.Failure("User with this email already exists.");
         }
 
-        // Check if phone number is already registered
-        var existingUserByPhone = await _userRepo.GetByPhoneNumberAsync(request.User.PhoneNumber);
-        if (existingUserByPhone is not null)
+        // Check if phone number is already registered (if provided)
+        if (!string.IsNullOrWhiteSpace(request.User.PhoneNumber))
         {
-            return BaseResponse.Failure("User with this phone number already exists.");
+            var existingUserByPhone = await _userRepo.GetByPhoneNumberAsync(request.User.PhoneNumber);
+            if (existingUserByPhone is not null)
+            {
+                return BaseResponse.Failure("User with this phone number already exists.");
+            }
         }
 
         // Hash the password before storing
         var user = _mapper.Map<User>(request.User);
         user.PasswordHash = _passwordHasher.Hash(request.User.Password);
-        user.PhoneVerified = true; // Set to true since we verified it
+        user.EmailVerified = true; // Set to true since we verified email with OTP
         await _userRepo.AddAsync(user);
         
         return new RegisterUserResponse() { Success = true, UserName = user.Username };

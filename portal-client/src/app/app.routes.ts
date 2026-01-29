@@ -20,6 +20,8 @@ import { PropertyDetailEffects } from './features/properties/components/property
 import { propertyDetailFeature } from './features/properties/components/property-detail/store/property-detail.reducer';
 import { EditPropertyEffects } from './features/properties/components/edit-property/store/edit-property.effects';
 import { editPropertyFeature } from './features/properties/components/edit-property/store/edit-property.reducer';
+import { WorkflowEffects } from './features/workflow/components/workflow-editor/store/workflow.effects';
+import { workflowFeature } from './features/workflow/components/workflow-editor/store/workflow.reducer';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -74,6 +76,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/properties/components/property-detail/property-detail.component').then(m => m.PropertyDetailComponent),
     providers: [provideState(propertyDetailFeature), provideEffects(PropertyDetailEffects)]
+  },
+  {
+    path: 'workflow',
+    loadComponent: () =>
+      import('./features/workflow/components/workflow-editor/workflow-editor.component').then(m => m.WorkflowEditorComponent),
+    providers: [provideState(workflowFeature), provideEffects(WorkflowEffects)]
   },
   {
     path: '',

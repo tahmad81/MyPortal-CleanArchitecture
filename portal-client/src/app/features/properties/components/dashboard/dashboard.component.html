@@ -14,7 +14,7 @@
   </div>
 
   <!-- Search Bar -->
-  <div class="bg-white/60 backdrop-blur-md rounded-lg border border-gray-200/50 shadow-sm p-4 mb-6">
+  <div class="rounded-lg border-2 border-white shadow-sm p-4 mb-6">
     <form [formGroup]="searchForm" (ngSubmit)="performSearch()" class="space-y-4">
       <!-- Main Search -->
       <div class="flex gap-2">
@@ -161,7 +161,7 @@
   <div *ngIf="!(isLoading$ | async) && !(error$ | async)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div
       *ngFor="let property of properties$ | async"
-      class="bg-white rounded-lg border border-gray-200 hover:border-black hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer"
+      class="rounded-lg border-2 border-white hover:border-white hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer"
       (click)="viewDetails(property.id)"
     >
       <!-- Property Image -->

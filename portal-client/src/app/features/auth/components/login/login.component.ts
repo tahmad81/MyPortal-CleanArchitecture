@@ -30,8 +30,9 @@ export class LoginComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.loginFacade.reset();
-
+    //this.loginFacade.reset();
+    let check = this.loginForm.valid;
+    console.log(check);
     this.loginFacade.response$.subscribe(response => {
       if (response?.success) {
             this.showToast('success', response.message ?? 'Login successful.');
