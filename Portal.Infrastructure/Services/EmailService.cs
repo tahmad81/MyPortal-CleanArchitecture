@@ -16,6 +16,7 @@ namespace Portal.Infrastructure.Services
 
         public EmailService(IConfiguration configuration)
         {
+
             _configuration = configuration;
             _fromEmail = _configuration["Email:FromEmail"] ?? "tauseef-ahmad@hotmail.com";
             _fromPassword = _configuration["Email:FromPassword"] ?? "";
