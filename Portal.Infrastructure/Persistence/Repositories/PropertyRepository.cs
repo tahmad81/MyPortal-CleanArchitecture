@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Infrastructure.Persistence.Repositories
 {
-    internal class PropertyRepository : IPropertyRepository
+    public class PropertyRepository : IPropertyRepository
     {
         private readonly AppDbContext _context;
 

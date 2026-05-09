@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Infrastructure.Persistence.Repositories
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
 

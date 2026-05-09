@@ -13,7 +13,10 @@ namespace Portal.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(UserProfile), typeof(PropertyProfile));
+            services.AddAutoMapper(cfg =>
+            {
+               cfg.AddMaps(Assembly.GetExecutingAssembly());
+            });
             services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             return services;

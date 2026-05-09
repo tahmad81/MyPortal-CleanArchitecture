@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Infrastructure.Persistence
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users => Set<User>();
@@ -50,7 +50,7 @@ namespace Portal.Infrastructure.Persistence
                 entity.HasKey(p => p.Id);
                 entity.Property(p => p.FileName).IsRequired().HasMaxLength(255);
                 entity.Property(p => p.FilePath).HasMaxLength(1000); // Optional if storing in DB
-                entity.Property(p => p.ImageData).HasColumnType("varbinary(max)"); // Store image data
+                entity.Property(p => p.ImageData).HasColumnType("longblob"); // Store image data
                 entity.Property(p => p.ContentType).HasMaxLength(100);
                 
                 // Relationship with Property

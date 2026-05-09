@@ -21,8 +21,14 @@ namespace Portal.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            //services.AddDbContext<AppDbContext>(options =>
+            //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(
+        configuration.GetConnectionString("MySqlConnection"),
+        ServerVersion.AutoDetect(configuration.GetConnectionString("MySqlConnection"))
+    ));
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPropertyRepository, PropertyRepository>();
@@ -30,7 +36,7 @@ namespace Portal.Infrastructure
 
             // Register reCAPTCHA service with HttpClient
             services.AddHttpClient<IRecaptchaService, RecaptchaService>();
-            
+
             // Register Phone Verification service
             services.AddScoped<IPhoneVerificationService, PhoneVerificationService>();
 
