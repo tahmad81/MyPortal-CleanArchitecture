@@ -58,12 +58,12 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, BaseResp
             return BaseResponse.Failure("Email is required.");
         }
 
-        var isEmailOtpValid = await _emailOtpService.VerifyOtpAsync(request.User.Email, request.User.EmailOtp);
+        //var isEmailOtpValid = await _emailOtpService.VerifyOtpAsync(request.User.Email, request.User.EmailOtp);
         
-        if (!isEmailOtpValid)
-        {
-            return BaseResponse.Failure("Email verification failed. Please verify your email with OTP again.");
-        }
+        //if (!isEmailOtpValid)
+        //{
+        //    return BaseResponse.Failure("Email verification failed. Please verify your email with OTP again.");
+        //}
 
         // Check if user already exists
         var existingUser = await _userRepo.GetByEmailAsync(request.User.Email);
