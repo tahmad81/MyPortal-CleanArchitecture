@@ -33,9 +33,8 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PortalClient", policy =>
-        policy.WithOrigins(
-                "https://localhost:4200",
-                "http://localhost:4200")
+        policy.AllowAnyOrigin()
+                
               .AllowAnyHeader()
               .AllowAnyMethod());
 });

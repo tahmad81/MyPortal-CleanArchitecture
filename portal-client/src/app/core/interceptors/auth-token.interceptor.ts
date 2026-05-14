@@ -6,15 +6,11 @@ import { TokenStorageService } from '../services/token-storage.service';
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenStorage = inject(TokenStorageService);
   const token = tokenStorage.getToken();
-
+let headers = req.headers.set('ngrok-skip-browser-warning', 'true');
   if (token) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    headers = headers.set('Authorization', `Bearer ${token}`);
   }
-
-  return next(req);
+const authReq = req.clone({ headers });
+  return next(authReq);
 };
 
