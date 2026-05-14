@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-6">
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 space-y-4 sm:space-y-0">
         <div>
           <h1 class="text-2xl font-bold text-gray-900 mb-1">My Property Ads</h1>
           <p class="text-sm text-gray-500">Manage and view all your property listings</p>
@@ -41,7 +41,7 @@
     <ng-container *ngIf="(properties$ | async) as allProperties">
     <div *ngIf="!(isLoading$ | async) && !(error$ | async) && allProperties && allProperties.length > 0" class="mb-6">
       <div class="rounded-xl border-2 border-white shadow-lg p-1.5 overflow-y-hidden">
-        <div class="flex space-x-2 overflow-x-auto overflow-y-hidden">
+        <div class="flex flex-wrap gap-2 overflow-x-auto overflow-y-hidden">
           <!-- Active Tab -->
           <button
             (click)="selectTab('active')"
@@ -240,7 +240,7 @@
                 <span class="font-medium">{{ property.viewCount || 0 }} views</span>
               </div>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="flex flex-wrap justify-center sm:justify-end gap-2">
               <button 
                 *ngIf="!property.isRemoved"
                 (click)="$event.stopPropagation(); router.navigate(['/properties/edit', property.id])"

@@ -261,7 +261,7 @@
           <!-- Area -->
           <div>
             <label for="area" class="block text-sm font-medium text-gray-700 mb-2">Area</label>
-            <div class="flex space-x-2">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
               <input
                 type="number"
                 id="area"
@@ -271,7 +271,7 @@
                 step="0.01"
                 class="input-field flex-1"
               />
-              <select formControlName="areaUnit" class="input-field w-32">
+              <select formControlName="areaUnit" class="input-field w-full sm:w-32">
                 <option *ngFor="let unit of areaUnits" [value]="unit.value">{{ unit.label }}</option>
               </select>
             </div>
@@ -394,18 +394,18 @@
       </div>
 
       <!-- Submit Button -->
-      <div class="flex items-center justify-end space-x-4 pt-6 border-t-2 border-white">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-white">
         <button
           type="button"
           (click)="router.navigate(['/properties/my-ads'])"
-          class="px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
+          class="w-full sm:w-auto px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
         >
           Cancel
         </button>
         <button
           type="submit"
           [disabled]="(isSubmitting$ | async) || editForm.invalid"
-          class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full sm:w-auto btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span *ngIf="!(isSubmitting$ | async)">Update Property</span>
           <span *ngIf="isSubmitting$ | async" class="flex items-center space-x-2">

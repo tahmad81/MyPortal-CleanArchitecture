@@ -1,6 +1,6 @@
-<div class="workflow-container">
+<div class="workflow-container flex flex-col lg:flex-row">
   <!-- Side Menu -->
-  <aside class="workflow-sidebar">
+  <aside class="workflow-sidebar w-full lg:w-64">
     <div class="sidebar-header">
       <h3 class="text-lg font-bold text-gray-800 mb-4">Node Types</h3>
       <p class="text-sm text-gray-600 mb-4">Click to add nodes</p>
@@ -30,7 +30,7 @@
   </aside>
 
   <!-- Main Canvas Area -->
-  <div class="workflow-canvas-container">
+  <div class="workflow-canvas-container min-h-[calc(100vh-28rem)] lg:min-h-0">
     <f-flow 
       fDraggable 
       (fNodePositionChanged)="onNodePositionChanged($event)"

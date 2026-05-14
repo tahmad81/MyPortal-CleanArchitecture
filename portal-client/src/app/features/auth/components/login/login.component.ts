@@ -25,14 +25,12 @@ export class LoginComponent implements OnInit {
   readonly error$ = this.loginFacade.error$;
 
   readonly loginForm = this.fb.group({
-    userName: ['', [Validators.required]],
-    password: ['', [Validators.required]]
+    userName: ['', [Validators.required, Validators.pattern(/\S+/)]],
+    password: ['', [Validators.required, Validators.pattern(/\S+/)]]
   });
 
   ngOnInit(): void {
-    //this.loginFacade.reset();
-    let check = this.loginForm.valid;
-    console.log(check);
+    this.loginFacade.reset();
     this.loginFacade.response$.subscribe(response => {
       if (response?.success) {
             this.showToast('success', response.message ?? 'Login successful.');
@@ -64,11 +62,16 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const { userName, password } = this.loginForm.getRawValue();
-    this.loginFacade.submit({
-      userName: userName!,
-      password: password!
-    });
+    const userName = (this.loginForm.get('userName')?.value as string | null)?.trim() ?? '';
+    const password = (this.loginForm.get('password')?.value as string | null)?.trim() ?? '';
+
+    if (!userName || !password) {
+      this.loginForm.get('userName')?.markAsTouched();
+      this.loginForm.get('password')?.markAsTouched();
+      return;
+    }
+
+    this.loginFacade.submit({ userName, password });
   }
 
   isFieldInvalid(field: string): boolean {

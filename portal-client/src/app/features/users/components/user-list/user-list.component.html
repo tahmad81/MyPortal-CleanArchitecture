@@ -19,7 +19,7 @@
   <!-- User Grid -->
   <div *ngIf="!(isLoading$ | async) && !(error$ | async)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <article *ngFor="let user of (users$ | async)" class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-200">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center space-x-4">
           <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-lg">
             {{ (user.username.slice(0, 2) || '').toUpperCase() }}
@@ -31,7 +31,7 @@
         </div>
         <div class="flex items-center space-x-2">
           <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Active</span>
-          <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <button class="w-full sm:w-auto p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
             </svg>

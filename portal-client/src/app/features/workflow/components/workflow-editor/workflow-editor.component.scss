@@ -148,6 +148,24 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .workflow-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .workflow-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: none;
+  }
+
+  .workflow-canvas-container {
+    min-height: calc(100vh - 28rem);
+  }
+}
+
 .workflow-node {
   min-width: 150px;
   background: white;
