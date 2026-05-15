@@ -6,8 +6,8 @@
   
   &::after {
     content: '';
-    position: fixed;
-    top: 4rem;
+    position: absolute;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -16,14 +16,10 @@
       url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1973&q=80');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll;
     background-repeat: no-repeat;
     z-index: 0;
     pointer-events: none;
-    
-    @media (max-width: 768px) {
-      background-attachment: scroll;
-    }
   }
   
   > * {

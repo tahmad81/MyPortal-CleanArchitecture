@@ -1,8 +1,8 @@
 <div class="min-h-screen">
   <!-- Header -->
   <header class="bg-black border-b border-gray-800 shadow-sm sticky top-0 z-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-wrap items-center justify-between min-h-16 overflow-hidden gap-3">
+    <div class="w-full max-w-full mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-7xl">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between min-h-16 overflow-hidden gap-3">
         <div class="flex items-center space-x-4">
           <button (click)="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors lg:hidden">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,9 +23,9 @@
           </div>
         </div>
         
-        <div class="flex items-center space-x-4 overflow-hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-3 w-full sm:w-auto overflow-hidden">
           <!-- Add Property Button and Pointing Icon (only on dashboard) -->
-          <div *ngIf="isDashboardRoute" class="flex items-center space-x-3 relative mr-2">
+          <div *ngIf="isDashboardRoute" class="flex items-center space-x-3 relative mr-0 sm:mr-2">
             <!-- Add Property Button, visible on all screen sizes -->
             <button
               (click)="navigateToCreateProperty()"
@@ -123,8 +123,16 @@
 
   <div class="flex min-h-[calc(100vh-4rem)] property-background relative">
     <!-- Sidebar -->
-    <aside [class]="'bg-white/60 backdrop-blur-md border-r border-gray-200/50 shadow-sm transition-all duration-300 ' + (sidebarOpen ? 'w-72 max-w-xs left-0' : '-ml-72 lg:ml-0') + ' fixed lg:static top-16 lg:top-auto h-[calc(100vh-4rem)] overflow-y-auto z-40'">
+    <aside [class]="'bg-white/60 backdrop-blur-md border-r border-gray-200/50 shadow-sm transition-all duration-300 ' + (sidebarOpen ? 'w-72 max-w-xs left-0' : '-left-72 lg:ml-0') + ' fixed lg:static top-16 lg:top-auto h-[calc(100vh-4rem)] overflow-y-auto z-40'">
       <div class="p-4">
+        <div class="flex items-center justify-between lg:hidden mb-4">
+          <span class="text-sm font-semibold text-gray-700">Menu</span>
+          <button (click)="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Close menu">
+            <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
         <div class="mb-6">
           <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider px-3 mb-3">Navigation</h3>
           <nav class="space-y-0.5">

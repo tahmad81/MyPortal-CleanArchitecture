@@ -1,9 +1,11 @@
 .workflow-container {
   display: flex;
-  height: calc(100vh - 8rem);
+  flex-direction: column;
+  min-height: calc(100vh - 8rem);
   background: #f8fafc;
   position: relative;
   overflow: hidden;
+  padding-bottom: 1.5rem;
 }
 
 .workflow-sidebar {
@@ -156,13 +158,14 @@
 
   .workflow-sidebar {
     width: 100%;
+    max-width: 100%;
     border-right: none;
     border-bottom: 1px solid #e2e8f0;
     box-shadow: none;
   }
 
   .workflow-canvas-container {
-    min-height: calc(100vh - 28rem);
+    min-height: 500px;
   }
 }
 

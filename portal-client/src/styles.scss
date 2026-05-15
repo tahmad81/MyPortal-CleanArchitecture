@@ -3,22 +3,44 @@
 @tailwind utilities;
 
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   :root {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
+  html, body {
+    min-height: 100%;
+    width: 100%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen;
+    @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen overflow-x-hidden;
+  }
+
+  img, picture, video, canvas, svg {
+    max-width: 100%;
+    display: block;
+  }
+
+  button, input, textarea, select {
+    font: inherit;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20;
+    @apply w-full max-w-full bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200;
+    @apply w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200;
   }
 
   .input-field {
