@@ -57,6 +57,7 @@ namespace Portal.Infrastructure
                     mem.SerializerName = "json";
                 });
                 
+
             });
 
             return services;
