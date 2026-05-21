@@ -8,6 +8,8 @@ using Portal.Infrastructure.Common;
 using Portal.Infrastructure.Persistence;
 using Portal.Infrastructure.Persistence.Repositories;
 using Portal.Infrastructure.Services;
+using EasyCaching.Core;
+using EasyCaching.Memcached;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +45,20 @@ namespace Portal.Infrastructure
             // Register Email services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IEmailOtpService, EmailOtpService>();
+
+            // --- EasyCaching (Memcached) registration ---
+            // Requires NuGet packages: EasyCaching.Core and EasyCaching.Memcached
+            services.AddEasyCaching(options =>
+            {
+                options.UseMemcached(mem =>
+                {
+                    var host = configuration["Memcached:Host"] ?? "localhost";
+                    var port = int.TryParse(configuration["Memcached:Port"], out var p) ? p : 11211;
+                    mem.AddServer(host, port);
+                    mem.SerializerName = "json";
+                }, "memcached1");
+                options.WithJson();
+            });
 
             return services;
         }
