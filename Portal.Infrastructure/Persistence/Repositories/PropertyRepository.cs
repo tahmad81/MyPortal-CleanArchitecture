@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Portal.Application.Interfaces;
+using EasyCaching.Core;
 using Portal.Core.Entities;
 using Portal.Infrastructure.Persistence;
 using System;
@@ -12,39 +13,75 @@ namespace Portal.Infrastructure.Persistence.Repositories
     public class PropertyRepository : IPropertyRepository
     {
         private readonly AppDbContext _context;
+        private readonly IEasyCachingProvider _cache;
 
-        public PropertyRepository(AppDbContext context)
+        public PropertyRepository(AppDbContext context, IEasyCachingProviderFactory cacheFactory)
         {
             _context = context;
+            _cache = cacheFactory.GetCachingProvider("memcached1");
         }
 
         public async Task<Property?> GetByIdAsync(Guid id)
         {
-            return await _context.Properties
+            var key = $"property:{id}";
+            var cached = await _cache.GetAsync<Property>(key);
+            if (cached.HasValue)
+            {
+                return cached.Value;
+            }
+
+            var property = await _context.Properties
                 .Include(p => p.User)
                 .Include(p => p.Photos.OrderBy(ph => ph.DisplayOrder))
                 .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (property != null)
+            {
+                await _cache.SetAsync(key, property, TimeSpan.FromMinutes(10));
+            }
+
+            return property;
         }
 
         public async Task<IEnumerable<Property>> GetByUserIdAsync(Guid userId)
         {
-            return await _context.Properties
+            var key = $"properties:user:{userId}";
+            var cached = await _cache.GetAsync<List<Property>>(key);
+            if (cached.HasValue)
+            {
+                return cached.Value;
+            }
+
+            var list = await _context.Properties
                 .Include(p => p.User)
                 .Include(p => p.Photos.OrderBy(ph => ph.DisplayOrder))
                 .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
+
+            await _cache.SetAsync(key, list, TimeSpan.FromMinutes(5));
+            return list;
         }
 
         public async Task<IEnumerable<Property>> GetAllAsync()
         {
             var now = DateTime.UtcNow;
-            return await _context.Properties
+            var key = "properties:all";
+            var cached = await _cache.GetAsync<List<Property>>(key);
+            if (cached.HasValue)
+            {
+                return cached.Value;
+            }
+
+            var list = await _context.Properties
                 .Include(p => p.User)
                 .Include(p => p.Photos.Where(ph => ph.IsPrimary))
                 .Where(p => p.IsActive && !p.IsRemoved && p.ExpiryDate > now)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
+
+            await _cache.SetAsync(key, list, TimeSpan.FromMinutes(2));
+            return list;
         }
 
         public async Task<IEnumerable<Property>> SearchAsync(

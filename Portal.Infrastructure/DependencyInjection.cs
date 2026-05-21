@@ -23,8 +23,7 @@ namespace Portal.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddDbContext<AppDbContext>(options =>
-            //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+       
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(
@@ -54,10 +53,10 @@ namespace Portal.Infrastructure
                 {
                     var host = configuration["Memcached:Host"] ?? "localhost";
                     var port = int.TryParse(configuration["Memcached:Port"], out var p) ? p : 11211;
-                    mem.AddServer(host, port);
+                    mem.DBConfig.AddServer(host,port);
                     mem.SerializerName = "json";
-                }, "memcached1");
-                options.WithJson();
+                });
+                
             });
 
             return services;
