@@ -3,6 +3,6 @@
  * Update this value to reflect the host/port where the ASP.NET API is running.
  */
 export const apiConfig = {
-  baseUrl: 'https://path-twirl-prevent.ngrok-free.dev/api'
+  baseUrl: 'https://localhost:7031/api'
 };
 

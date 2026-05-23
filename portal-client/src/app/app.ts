@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthStateService } from './core/services/auth-state.service';
@@ -91,7 +91,7 @@ export class App implements OnInit {
     }
   }
   
-  sidebarOpen = true;
+  sidebarOpen = false;
   userMenuOpen = false;
   
   // Expose currentUser signal for template
@@ -99,6 +99,20 @@ export class App implements OnInit {
   
   ngOnInit(): void {
     // User state is already loaded from localStorage by the service
+    if (typeof window !== 'undefined') {
+      this.sidebarOpen = window.innerWidth >= 1024;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event: Event) {
+    const width = (event.target as Window).innerWidth;
+    if (width < 1024 && this.sidebarOpen) {
+      this.sidebarOpen = false;
+    }
+    if (width >= 1024 && !this.sidebarOpen) {
+      this.sidebarOpen = true;
+    }
   }
   
   toggleSidebar() {

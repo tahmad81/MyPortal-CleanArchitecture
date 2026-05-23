@@ -55,9 +55,9 @@ namespace Portal.Infrastructure
                     var port = int.TryParse(configuration["Memcached:Port"], out var p) ? p : 11211;
                     mem.DBConfig.AddServer(host,port);
                     mem.SerializerName = "json";
-                });
-                
+                }, "memcached1");
 
+                options.WithJson("json");
             });
 
             return services;

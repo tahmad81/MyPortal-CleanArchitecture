@@ -67,8 +67,16 @@ namespace Portal.Infrastructure.Persistence.Repositories
         {
             var now = DateTime.UtcNow;
             var key = "properties:all";
-            var cached = await _cache.GetAsync<List<Property>>(key);
-            if (cached.HasValue)
+            CacheValue<List<Property>> cached = null;
+            try
+            {
+                 cached = await _cache.GetAsync<List<Property>>(key);
+            }
+            catch 
+            {
+             
+            }
+            if (cached!=null && cached.HasValue)
             {
                 return cached.Value;
             }
