@@ -1,3 +1,4 @@
+using Portal.Application.Interfaces;
 using Portal.Application.Services;
 using System.Collections.Concurrent;
 
@@ -10,10 +11,11 @@ namespace Portal.Infrastructure.Services
         // In-memory storage for OTPs. In production, consider using Redis or database
         private static readonly ConcurrentDictionary<string, OtpData> _otpStorage = new();
         private static readonly TimeSpan OtpExpirationTime = TimeSpan.FromMinutes(10);
-
-        public EmailOtpService(IEmailService emailService)
+        private readonly IUserRepository _userRepo;
+        public EmailOtpService(IEmailService emailService, IUserRepository userRepo)
         {
             _emailService = emailService;
+            _userRepo = userRepo;
         }
 
         public async Task<string> GenerateAndSendOtpAsync(string email)
@@ -22,6 +24,11 @@ namespace Portal.Infrastructure.Services
             {
                 throw new ArgumentException("Email cannot be empty", nameof(email));
             }
+
+            //if (await IsEmailRegisteredAsync(email))
+            //{
+            //    throw new InvalidOperationException("This email is already registered.");
+            //}
 
             // Generate 6-digit OTP
             var random = new Random();
@@ -96,6 +103,17 @@ namespace Portal.Infrastructure.Services
             }
 
             return Task.FromResult(false);
+        }
+
+        public async Task<bool> IsEmailRegisteredAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return false;
+            }
+
+            var user = await _userRepo.GetByEmailAsync(email);
+            return user != null;
         }
 
         private void CleanupExpiredOtps()

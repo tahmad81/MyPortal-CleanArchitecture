@@ -316,14 +316,14 @@ export class CreateAdComponent implements OnInit {
       return {
         title: 'User Agreement & Terms of Service',
         notice: 'IMPORTANT NOTICE: PLEASE READ CAREFULLY',
-        intro: 'By submitting a property listing on this Property Portal ("the Platform"), you acknowledge and agree to the following terms and conditions:',
+        intro: 'By submitting a property listing on this MereZameen ("the Platform"), you acknowledge and agree to the following terms and conditions:',
         section1: {
           title: '1. Platform Nature:',
-          text: 'This Property Portal is a classified advertising platform designed solely for the purpose of creating and displaying property listings. The Platform acts exclusively as an intermediary service provider facilitating the connection between property owners/advertisers and potential buyers/renters.'
+          text: 'This MereZameen is a classified advertising platform designed solely for the purpose of creating and displaying property listings. The Platform acts exclusively as an intermediary service provider facilitating the connection between property owners/advertisers and potential buyers/renters.'
         },
         section2: {
           title: '2. No Responsibility for Transactions:',
-          text: 'The Property Portal is NOT responsible for, and expressly disclaims any and all liability related to:',
+          text: 'The MereZameen is NOT responsible for, and expressly disclaims any and all liability related to:',
           items: [
             'Any transactions, agreements, or deals entered into between parties using this Platform',
             'The accuracy, completeness, or truthfulness of property listings posted by users',
@@ -347,7 +347,7 @@ export class CreateAdComponent implements OnInit {
         },
         section4: {
           title: '4. Limitation of Liability:',
-          text: 'To the maximum extent permitted by law, the Property Portal, its owners, operators, employees, and affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from or related to the use of this Platform or any property listings contained herein.'
+          text: 'To the maximum extent permitted by law, the MereZameen, its owners, operators, employees, and affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from or related to the use of this Platform or any property listings contained herein.'
         },
         section5: {
           title: '5. No Warranty:',
@@ -355,14 +355,14 @@ export class CreateAdComponent implements OnInit {
         },
         section6: {
           title: '6. Indemnification:',
-          text: 'By using this Platform, you agree to indemnify and hold harmless the Property Portal from any claims, damages, losses, liabilities, costs, and expenses (including legal fees) arising from your use of the Platform, your property listing, or any transactions entered into as a result of using this Platform.'
+          text: 'By using this Platform, you agree to indemnify and hold harmless the MereZameen from any claims, damages, losses, liabilities, costs, and expenses (including legal fees) arising from your use of the Platform, your property listing, or any transactions entered into as a result of using this Platform.'
         },
         section7: {
           title: '7. Acceptance:',
           text: 'By checking the agreement acceptance box and submitting a property listing, you confirm that you have read, understood, and agree to be bound by all terms and conditions set forth in this User Agreement.'
         },
         warning: 'IF YOU DO NOT AGREE TO THESE TERMS, DO NOT SUBMIT A PROPERTY LISTING ON THIS PLATFORM.',
-        checkboxLabel: 'I have read, understood, and agree to the User Agreement and Terms of Service stated above. I acknowledge that the Property Portal is not responsible for any transactions or property-related matters.',
+        checkboxLabel: 'I have read, understood, and agree to the User Agreement and Terms of Service stated above. I acknowledge that the MereZameen is not responsible for any transactions or property-related matters.',
         errorMessage: 'You must accept the User Agreement to submit a property listing.'
       };
     }

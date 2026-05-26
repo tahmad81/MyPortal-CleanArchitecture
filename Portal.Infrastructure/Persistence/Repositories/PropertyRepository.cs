@@ -46,12 +46,19 @@ namespace Portal.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<Property>> GetByUserIdAsync(Guid userId)
         {
             var key = $"properties:user:{userId}";
-            var cached = await _cache.GetAsync<List<Property>>(key);
-            if (cached.HasValue)
+            try
             {
-                return cached.Value;
+                var cached = await _cache.GetAsync<List<Property>>(key);
+                if (cached != null && cached.HasValue)
+                {
+                    return cached.Value;
+                }
             }
 
+            catch
+            {
+                // Ignore cache errors
+            }
             var list = await _context.Properties
                 .Include(p => p.User)
                 .Include(p => p.Photos.OrderBy(ph => ph.DisplayOrder))
@@ -70,13 +77,13 @@ namespace Portal.Infrastructure.Persistence.Repositories
             CacheValue<List<Property>> cached = null;
             try
             {
-                 cached = await _cache.GetAsync<List<Property>>(key);
+                cached = await _cache.GetAsync<List<Property>>(key);
             }
-            catch 
+            catch
             {
-             
+
             }
-            if (cached!=null && cached.HasValue)
+            if (cached != null && cached.HasValue)
             {
                 return cached.Value;
             }
@@ -112,7 +119,7 @@ namespace Portal.Infrastructure.Persistence.Repositories
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 searchTerm = searchTerm.ToLower();
-                query = query.Where(p => 
+                query = query.Where(p =>
                     p.Title.ToLower().Contains(searchTerm) ||
                     p.Description.ToLower().Contains(searchTerm) ||
                     p.Address.ToLower().Contains(searchTerm) ||

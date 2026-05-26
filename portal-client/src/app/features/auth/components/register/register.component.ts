@@ -8,7 +8,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 
@@ -29,6 +29,7 @@ export class RegisterComponent implements OnInit {
   private readonly registerFacade = inject(RegisterFacade);
   private readonly authService = inject(AuthService);
   private readonly recaptchaService = inject(RecaptchaService);
+  private readonly router = inject(Router);
   
   toastMessage: { type: 'success' | 'error'; message: string } | null = null;
 
@@ -78,6 +79,9 @@ export class RegisterComponent implements OnInit {
       .subscribe(message => {
         this.showToast('success', message!);
         this.resetForm();
+        setTimeout(() => {
+          this.router.navigate(['/auth/login']);
+        }, 1800);
       });
 
     this.errorMessage$
