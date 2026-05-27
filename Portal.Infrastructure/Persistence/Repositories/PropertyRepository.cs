@@ -24,11 +24,19 @@ namespace Portal.Infrastructure.Persistence.Repositories
         public async Task<Property?> GetByIdAsync(Guid id)
         {
             var key = $"property:{id}";
-            var cached = await _cache.GetAsync<Property>(key);
-            if (cached.HasValue)
+            try
             {
-                return cached.Value;
+                var cached = await _cache.GetAsync<Property>(key);
+                if (cached.HasValue)
+                {
+                    return cached.Value;
+                }
             }
+            catch
+            {
+                // Ignore cache errors
+            }   
+            
 
             var property = await _context.Properties
                 .Include(p => p.User)
