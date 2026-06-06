@@ -6,7 +6,8 @@ export const environment = {
   endpoints: {
     auth: {
       register: '/auth/register',
-      login: '/auth/login'
+      login: '/auth/login',
+      socialLogin: '/auth/social-login'
     },
     users: {
       list: '/users'

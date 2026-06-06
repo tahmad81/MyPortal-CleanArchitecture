@@ -74,6 +74,14 @@ export class LoginComponent implements OnInit {
     this.loginFacade.submit({ userName, password });
   }
 
+  loginWithGoogle(): void {
+    this.loginFacade.loginWithGoogle();
+  }
+
+  loginWithFacebook(): void {
+    this.loginFacade.loginWithFacebook();
+  }
+
   isFieldInvalid(field: string): boolean {
     const control = this.loginForm.get(field);
     return !!control && control.invalid && control.touched;

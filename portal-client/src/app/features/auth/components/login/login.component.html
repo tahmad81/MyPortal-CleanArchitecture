@@ -104,6 +104,24 @@
           </button>
         </form>
 
+        <div class="mt-6 space-y-3">
+          <button
+            type="button"
+            (click)="loginWithGoogle()"
+            class="w-full btn-google border border-gray-300 rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+          >
+            Continue with Google
+          </button>
+
+          <button
+            type="button"
+            (click)="loginWithFacebook()"
+            class="w-full btn-facebook border border-gray-300 rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+          >
+            Continue with Facebook
+          </button>
+        </div>
+
         <div class="mt-6 text-center text-sm text-gray-600">
           Don't have an account?
           <a routerLink="/auth/register" class="ml-1 font-semibold text-black hover:text-gray-700 transition-colors">

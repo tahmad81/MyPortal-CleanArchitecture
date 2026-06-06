@@ -21,6 +21,14 @@ export class LoginFacade {
     this.store.dispatch(LoginActions.submit({ payload }));
   }
 
+  loginWithGoogle(): void {
+    this.store.dispatch(LoginActions.loginWithGoogle());
+  }
+
+  loginWithFacebook(): void {
+    this.store.dispatch(LoginActions.loginWithFacebook());
+  }
+
   reset(): void {
     this.store.dispatch(LoginActions.reset());
   }
