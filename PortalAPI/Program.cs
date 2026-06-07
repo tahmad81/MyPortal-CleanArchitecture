@@ -1,10 +1,20 @@
+using Serilog;
 using Portal.Infrastructure;
 using Portal.Application;
 using Portal.Application.Converters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs\\app-.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -65,6 +75,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Register exception handling middleware to log errors and return a standardized response
+app.UseMiddleware<PortalAPI.Middleware.ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors("PortalClient");
