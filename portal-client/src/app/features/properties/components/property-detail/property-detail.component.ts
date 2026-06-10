@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Property, PropertyPhoto } from '../../../../core/models/property.models';
+import { AuthStateService } from '../../../../core/services/auth-state.service';
 import { PropertyDetailFacade } from './store/property-detail.facade';
 
 @Component({
@@ -15,10 +16,12 @@ export class PropertyDetailComponent implements OnInit {
   private readonly propertyDetailFacade = inject(PropertyDetailFacade);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
+  private readonly authState = inject(AuthStateService);
 
   readonly property$ = this.propertyDetailFacade.property$;
   readonly isLoading$ = this.propertyDetailFacade.isLoading$;
   readonly error$ = this.propertyDetailFacade.error$;
+  readonly currentUser = this.authState.currentUser;
 
   currentImageIndex = 0;
 
