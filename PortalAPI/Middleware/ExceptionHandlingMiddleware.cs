@@ -55,8 +55,7 @@ namespace PortalAPI.Middleware
                 // Log using ILogger (which forwards to Serilog when configured)
                 _logger.LogError(ex, "Unhandled exception in {Class}.{Method} at {TimestampUtc} for request {RequestPath} by {User}", className ?? "UnknownClass", methodName ?? "UnknownMethod", timestampUtc, requestPath, user);
 
-                // Also emit to Serilog static logger to ensure exception details are captured
-                Log.Logger.Error(ex, "Unhandled exception captured. Class={Class}, Method={Method}, TimestampUtc={TimestampUtc}, RequestPath={RequestPath}, User={User}", className ?? "UnknownClass", methodName ?? "UnknownMethod", timestampUtc, requestPath, user);
+               
 
                 if (!context.Response.HasStarted)
                 {

@@ -5,12 +5,14 @@ using Portal.Application.Converters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IO;
 
+var logPath = Path.Combine(AppContext.BaseDirectory, "logs", "app-.log");
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.File("logs\\app-.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14)
+    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14, shared: true)
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
