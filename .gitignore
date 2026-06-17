@@ -2,13 +2,14 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Portal.Application/bin/Debug/net8.0
+/Portal.Application/bin
 /Portal.Application/obj
 /PortalAPI/.vs
 /PortalAPI/bin/Debug/net8.0
 /PortalAPI/obj
 /Portal.Core/obj
 /Portal.Infrastructure/obj
+/Portal.Infrastructure/bin
 /Portal.Shared/obj
 /Portal.Core/bin/Debug/net8.0
 /Portal.Infrastructure/bin/Debug/net8.0
@@ -33,3 +34,9 @@
 /PortalAPI/bin/Debug/net10.0/PortalAPI.exe
 /PortalAPI/bin/Debug/net10.0/PortalAPI.pdb
 *.dll
+/Portal.Application/bin/Debug/net10.0/Portal.Application.dll
+/Portal.Application/bin/Debug/net10.0/Portal.Core.dll
+/Portal.Application/bin/Debug/net10.0/Portal.Application.pdb
+/Portal.Application/bin/Debug/net10.0/Portal.Core.pdb
+/Portal.Core/bin/Debug/net10.0/Portal.Core.dll
+/Portal.Core/bin/Debug/net10.0/Portal.Core.pdb

@@ -8,6 +8,8 @@ using Portal.Infrastructure.Common;
 using Portal.Infrastructure.Persistence;
 using Portal.Infrastructure.Persistence.Repositories;
 using Portal.Infrastructure.Services;
+using MassTransit;
+using Portal.Infrastructure.Consumers;
 using EasyCaching.Core;
 using EasyCaching.Memcached;
 using System;
@@ -59,6 +61,28 @@ namespace Portal.Infrastructure
 
                 options.WithJson("json");
             });
+
+            // MassTransit + RabbitMQ registration
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<PropertyCreatedConsumer>();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host("localhost", 5672, "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+
+                    cfg.ReceiveEndpoint("realestate-email-queue", e =>
+                    {
+                        e.ConfigureConsumer<PropertyCreatedConsumer>(context);
+                    });
+                });
+            });
+
+            
 
             return services;
         }

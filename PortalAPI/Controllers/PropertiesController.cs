@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MassTransit;
+using Portal.Application.Events;
 using Portal.Application.Commands.Properties;
 using Portal.Application.Dtos;
 using Portal.Application.Queries.Properties;
@@ -15,10 +17,12 @@ namespace PortalAPI.Controllers
     public class PropertiesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public PropertiesController(IMediator mediator)
+        public PropertiesController(IMediator mediator, IPublishEndpoint publishEndpoint)
         {
             _mediator = mediator;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet("latest")]
@@ -90,6 +94,18 @@ namespace PortalAPI.Controllers
             {
                 return BadRequest(result);
             }
+
+            var property = result.Data!;
+            var agentEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+
+            var propertyCreatedEvent = new PropertyCreatedEvent(
+                property.Id,
+                property.Title,
+                $"{property.Address}, {property.City}, {property.State}, {property.Country}",
+                property.Price,
+                agentEmail);
+
+            _ = _publishEndpoint.Publish(propertyCreatedEvent);
 
             return CreatedAtAction(nameof(GetMyAds), new { id = result.Data?.Id }, result);
         }
